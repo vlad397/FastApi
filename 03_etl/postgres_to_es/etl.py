@@ -18,7 +18,7 @@ from queries import make_query, make_prequery
 @backoff.on_exception(backoff.expo, BaseException)
 def etl_part2(
         pg_objects: list or tuple,
-        es: elasticsearch.client.Elasticsearch, state) -> None:
+        es: elasticsearch.client.Elasticsearch, state: str) -> None:
 
     def gendata(index):
         for doc in data_to_load:
