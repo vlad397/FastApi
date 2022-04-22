@@ -122,3 +122,4 @@ def get_genres_services(
         elastic: AsyncElasticsearch = Depends(get_elastic),
 ) -> GenresServices:
     return GenresServices(redis, elastic)
+

@@ -185,3 +185,4 @@ def get_film_service(
         elastic: AsyncElasticsearch = Depends(get_elastic),
 ) -> FilmService:
     return FilmService(redis, elastic)
+
