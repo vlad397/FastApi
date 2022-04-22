@@ -46,4 +46,3 @@ if __name__ == '__main__':
         log_config=LOGGING,
         log_level=logging.DEBUG,
     )
-
