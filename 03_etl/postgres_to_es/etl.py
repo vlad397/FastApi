@@ -52,7 +52,7 @@ def etl_part2(
                 'name': data['name']
             }
         data_to_load.append(object)
-    
+
     # Отправка пачки объектов в ElasticSearch
     if state == 'film_work':
         helpers.bulk(es, gendata('movies'))
@@ -69,7 +69,7 @@ def etl_part1(
     logging.info('Начало etl')
 
     # Подключение к хранилищу, получение состояния
-    r = redis.Redis() # (host=os.environ.get('REDIS_HOST'), port=os.environ.get('REDIS_PORT'))
+    r = redis.Redis()  # (host=os.environ.get('REDIS_HOST'), port=os.environ.get('REDIS_PORT'))
     if not r.exists('film_work') == 1:
         r.set(name='film_work', value=dt.datetime.min.isoformat())
     if not r.exists('person') == 1:
@@ -103,7 +103,7 @@ def etl_part1(
                         films_ids.append(row['fid'])
                         if state == 'genre':
                             genre = {'gid': row['gid'],
-                                           'name': row['name']}
+                                     'name': row['name']}
                             if genre not in genres:
                                 genres.append(genre)
                 else:
@@ -166,16 +166,16 @@ if __name__ == '__main__':
     )
 
     dsl = {
-        'dbname': 'movies_database', # os.environ.get('POSTGRES_DB'),
-        'user': 'app', #os.environ.get('POSTGRES_USER'),
-        'password': '123qwe', # os.environ.get('POSTGRES_PASSWORD'),
-        'host': '127.0.0.1', # os.environ.get('DB_HOST', '127.0.0.1'),
-        'port': 5432 # os.environ.get('DB_PORT', 5432)
+        'dbname': 'movies_database',  # os.environ.get('POSTGRES_DB'),
+        'user': 'app',  # os.environ.get('POSTGRES_USER'),
+        'password': '123qwe',  # os.environ.get('POSTGRES_PASSWORD'),
+        'host': '127.0.0.1',  # os.environ.get('DB_HOST', '127.0.0.1'),
+        'port': 5432  # os.environ.get('DB_PORT', 5432)
     }
 
     es_dsl = {
-        'host': 'localhost', # os.environ.get('ES_HOST', 'localhost'),
-        'port': 9200 # os.environ.get('ES_PORT', 9200)
+        'host': 'localhost',  # os.environ.get('ES_HOST', 'localhost'),
+        'port': 9200  # os.environ.get('ES_PORT', 9200)
         }
 
     while True:

@@ -1,6 +1,6 @@
+import json
 from functools import lru_cache
 from typing import Optional
-import json
 
 from aioredis import Redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
@@ -14,74 +14,98 @@ GENRE_CACHE_EXPIRE_IN_SECONDS = 60 * 5
 
 
 class GenreService:
+    '''Выдача информации по жанру по uuid'''
     def __init__(self, redis: Redis, elastic: AsyncElasticsearch):
         self.redis = redis
         self.elastic = elastic
 
     async def get_by_id(self, genre_id: str) -> Optional[Genre]:
-
+        '''Основная функция выдачи информации по жанру'''
+        # Ищем жанр в кэше
         genre = await self._genre_from_cache(genre_id)
         if not genre:
+            # Если в кэше нет - ищем в es
             genre = await self._get_genre_from_elastic(genre_id)
             if not genre:
+                # Нигде нет - возвращаем None
                 return None
+            # Нашелся в es - сохраняем в кэше
             await self._put_genre_to_cache(genre)
 
         return genre
-    
+
     async def _get_genre_from_elastic(self, genre_id: str) -> Optional[Genre]:
+        '''Функция поиска жанра в es'''
         try:
             doc = await self.elastic.get('genres', genre_id)
-            print(doc)
         except NotFoundError:
             return None
         return Genre(**doc['_source'])
-    
+
     async def _genre_from_cache(self, genre_id: str) -> Optional[Genre]:
+        '''Функция поиска жанра в кэше'''
         data = await self.redis.get(genre_id)
         if not data:
             return None
-        
+
         genre = Genre.parse_raw(data)
         return genre
-    
+
     async def _put_genre_to_cache(self, genre: Genre):
-        await self.redis.set(genre.uuid, genre.json(), expire=GENRE_CACHE_EXPIRE_IN_SECONDS)
+        '''Сохранение жанра в кэше'''
+        await self.redis.set(
+            genre.uuid, genre.json(),
+            expire=GENRE_CACHE_EXPIRE_IN_SECONDS
+        )
 
 
 class GenresServices:
+    '''Выдача информации по всем жанрам'''
     def __init__(self, redis: Redis, elastic: AsyncElasticsearch):
         self.redis = redis
         self.elastic = elastic
-    
+
     async def get_all(self) -> list:
+        '''Основная функция выдачи информации по всем жанрам'''
+        # Ищем жанры в кэше
         genres = await self._genres_from_cache('genres')
 
         if not genres:
+            # В кэше нет - ищем в es
             genres = await self._get_genres_from_elastic()
+            # И сохраняем в кэше
             await self._put_genres_to_cache(genres)
         return genres
-    
+
     async def _get_genres_from_elastic(self) -> list:
+        '''Функция поиска жанров в es'''
         genres_list = []
         try:
-            docs = await self.elastic.search(index='genres', body={'size' : 26, "query":{"match_all":{}}})
+            # Пробуем найти фильмы в es, иначе возвращаем пустой список
+            docs = await self.elastic.search(
+                index='genres', body={'size': 26, "query": {"match_all": {}}}
+            )
             for doc in docs['hits']['hits']:
                 genres_list.append(doc['_source'])
         except NotFoundError:
             return []
         return genres_list
-    
+
     async def _genres_from_cache(self, key: str) -> Optional[list]:
+        '''Функция поиска жанров в кэше'''
         data = await self.redis.get(key)
-        data = json.loads(data)
         if not data:
             return None
-        
+        data = json.loads(data)
+
         return data
-    
+
     async def _put_genres_to_cache(self, genres: list):
-        await self.redis.set('genres', json.dumps(genres), expire=GENRE_CACHE_EXPIRE_IN_SECONDS)
+        '''Функция сохранения жанров в кэше'''
+        await self.redis.set(
+            'genres', json.dumps(genres),
+            expire=GENRE_CACHE_EXPIRE_IN_SECONDS
+        )
 
 
 @lru_cache()
