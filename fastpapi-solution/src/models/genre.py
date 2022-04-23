@@ -1,16 +1,7 @@
-import orjson
-from pydantic import BaseModel
+from models.base import BaseMovie
 
 
-def orjson_dumps(v, *, default):
-    return orjson.dumps(v, default=default).decode()
-
-
-class Genre(BaseModel):
-    '''Модель жанров'''
-    uuid: str
+class Genre(BaseMovie):
+    """Модель жанров"""
+    uuid: str   # todo rename
     name: str
-
-    class Config:
-        json_loads = orjson.loads
-        json_dumps = orjson_dumps
