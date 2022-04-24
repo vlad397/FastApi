@@ -3,11 +3,17 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-
 from services.films import (FilmService, FilmsServices, get_film_service,
                             get_films_services)
 
 router = APIRouter()
+
+
+class Film(BaseModel):
+    """Упрощенный сериализатор фильма для списков."""
+    id: str
+    title: str
+    imdb_rating: float
 
 
 class Film_Detail(BaseModel):
@@ -25,12 +31,12 @@ class Film_Detail(BaseModel):
 @router.get('/')
 @router.get('/search')
 async def film_list(
-    films_services: FilmsServices = Depends(get_films_services),
-    query: Optional[str] = None,  # query param для поиска в названии
-    genre: Optional[str] = None,  # query param для фильтрации по жанру
-    sort: Optional[str] = '-imdb_rating',  # q_з для сортировки по рейтингу
-    page_size: Optional[int] = 10,  # Количество объектов на странице
-    page_number: Optional[int] = 1  # Номер страницы
+        films_services: FilmsServices = Depends(get_films_services),
+        query: Optional[str] = None,  # query param для поиска в названии
+        genre: Optional[str] = None,  # query param для фильтрации по жанру
+        sort: Optional[str] = '-imdb_rating',  # q_з для сортировки по рейтингу
+        page_size: Optional[int] = 10,  # Количество объектов на странице
+        page_number: Optional[int] = 1  # Номер страницы
 ) -> Optional[list]:
     if query:
         genre = None
@@ -47,8 +53,8 @@ async def film_list(
 
 @router.get('/{film_id}', response_model=Film_Detail)
 async def film_details(
-    film_id: str,
-    film_service: FilmService = Depends(get_film_service)
+        film_id: str,
+        film_service: FilmService = Depends(get_film_service)
 ) -> Film_Detail:
     film = await film_service.get_by_id(film_id)
     if not film:

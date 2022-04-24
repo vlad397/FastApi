@@ -2,7 +2,6 @@ from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
-
 from services.genres import (GenreService, GenresServices, get_genre_service,
                              get_genres_services)
 
