@@ -1,4 +1,3 @@
-import uuid
 from typing import ClassVar
 
 from models.base import BaseMovie

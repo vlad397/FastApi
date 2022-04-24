@@ -2,10 +2,11 @@ from functools import lru_cache
 from typing import List, Optional
 
 from aioredis import Redis
+from elasticsearch import AsyncElasticsearch
+from fastapi import Depends
+
 from db.elastic import get_elastic
 from db.redis import get_redis
-from elasticsearch import AsyncElasticsearch, NotFoundError
-from fastapi import Depends
 from models.films import Film
 from models.person import Person
 from services.base import BaseService, SearchServiceMixin
@@ -24,13 +25,15 @@ class PersonService(BaseService, SearchServiceMixin):
             # Если фильма нет в кеше, то ищем его в Elasticsearch
             instance = await self._get_instance_from_elastic(base_id)
             if not instance:
-                # Если он отсутствует в Elasticsearch, значит, фильма вообще нет в базе
+                # Если он отсутствует в ES, значит, фильма вообще нет в базе
                 return None
             # Сохраняем фильм  в кеш
             await self._put_instance_to_cache(instance)
         film_ids = instance.film_ids
         film_service = FilmService(self.redis, self.elastic)
-        films = [await film_service.get_by_id(str(film_id)) for film_id in film_ids]
+        films = [await film_service.get_by_id(
+            str(film_id)
+        ) for film_id in film_ids]
 
         return films
 

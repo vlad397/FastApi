@@ -1,6 +1,5 @@
-from typing import Optional
+from typing import ClassVar, Optional
 
-from typing import ClassVar
 from models.base import BaseMovie
 
 

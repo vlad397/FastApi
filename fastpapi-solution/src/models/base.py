@@ -2,7 +2,7 @@ import uuid
 from typing import ClassVar
 
 import orjson
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, validator
 
 
 def orjson_dumps(v, *, default):

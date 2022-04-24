@@ -1,14 +1,16 @@
 import json
 from functools import lru_cache
-from typing import Dict, List, Optional, TypeVar, Union
+from typing import List, Optional, TypeVar
 
 from aioredis import Redis
-from db.elastic import get_elastic
-from db.redis import get_redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
 from fastapi.encoders import jsonable_encoder
 from pydantic import parse_obj_as
+
+from db.elastic import get_elastic
+from db.redis import get_redis
+from models.base import BaseMovie
 
 FILM_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
 
@@ -32,7 +34,8 @@ class BaseService(SimpleService):
     Использует дженерик для работы с моделью."""
     instance = T
 
-    # get_by_id возвращает объект фильма. Он опционален, так как фильм может отсутствовать в базе
+    # get_by_id возвращает объект фильма.
+    # Он опционален, так как фильм может отсутствовать в базе
     async def get_by_id(self, base_id: str) -> Optional[T]:
         # Пытаемся получить данные из кеша, потому что оно работает быстрее
         instance = await self._instance_from_cache(base_id)
@@ -40,37 +43,37 @@ class BaseService(SimpleService):
             # Если фильма нет в кеше, то ищем его в Elasticsearch
             instance = await self._get_instance_from_elastic(base_id)
             if not instance:
-                # Если он отсутствует в Elasticsearch, значит, фильма вообще нет в базе
+                # Если он отсутствует в ES, значит, фильма вообще нет в базе
                 return None
             # Сохраняем фильм  в кеш
             await self._put_instance_to_cache(instance)
 
         return instance
 
-    async def _get_instance_from_elastic(self, instance_id: str) -> Optional[T]:
+    async def _get_instance_from_elastic(
+        self, instance_id: str
+    ) -> Optional[T]:
         try:
-            doc = await self.elastic.get(index=self.instance.index, id=instance_id)
+            doc = await self.elastic.get(
+                index=self.instance.index, id=instance_id
+            )
         except NotFoundError:
             return None
         return self.instance(**doc['_source'])
 
     async def _instance_from_cache(self, instance_id: str) -> Optional[T]:
         # Пытаемся получить данные о фильме из кеша, используя команду get
-        # https://redis.io/commands/get
         data = await self.redis.get(instance_id)
         if not data:
             return None
 
-        # pydantic предоставляет удобное API для создания объекта моделей из json
         instance = self.instance.parse_raw(data)
         return instance
 
     async def _put_instance_to_cache(self, instance: T):
-        # Сохраняем данные о фильме, используя команду set
-        # Выставляем время жизни кеша — 5 минут
-        # https://redis.io/commands/set
-        # pydantic позволяет сериализовать модель в json
-        await self.redis.set(instance.id, instance.json(), expire=FILM_CACHE_EXPIRE_IN_SECONDS)
+        await self.redis.set(
+            instance.id, instance.json(), expire=FILM_CACHE_EXPIRE_IN_SECONDS
+        )
 
 
 class SearchServiceMixin(SimpleService):
@@ -90,7 +93,8 @@ class SearchServiceMixin(SimpleService):
                      page_number: Optional[int] = 1,
                      page_size: Optional[int] = 50,
                      **kwargs) -> Optional[List[T]]:
-        redis_key = f'{query_str};{page_number};{page_size}'
+        redis_key = (f'{self.instance.index}|'
+                     f'{query_str}|{page_number}|{page_size}')
 
         results = await self._get_search_from_cache(redis_key)
         if not results:
@@ -114,7 +118,8 @@ class SearchServiceMixin(SimpleService):
                 size=page_size)
         except NotFoundError:
             return None
-        return [self.instance(**hit.get('_source')) for hit in doc.get('hits').get('hits')]
+        return [self.instance(
+            **hit.get('_source')) for hit in doc.get('hits').get('hits')]
 
     async def _get_search_from_cache(self, redis_key: str) -> Optional[T]:
         data = await self.redis.get(redis_key)

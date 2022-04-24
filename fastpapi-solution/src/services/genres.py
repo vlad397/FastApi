@@ -1,15 +1,13 @@
-import json
 from functools import lru_cache
-from typing import Optional
 
 from aioredis import Redis
-from db.elastic import get_elastic
-from db.redis import get_redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
-from models.genre import Genre
-from services.base import BaseService, BaseListService
 
+from db.elastic import get_elastic
+from db.redis import get_redis
+from models.genre import Genre
+from services.base import BaseListService, BaseService
 
 
 class GenreService(BaseService):
