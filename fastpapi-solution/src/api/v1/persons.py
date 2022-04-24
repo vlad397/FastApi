@@ -2,7 +2,7 @@ import uuid
 from http import HTTPStatus
 from typing import List, Optional
 
-from api.v1.films import Film
+from api.v1.films import Film_API
 from fastapi import APIRouter, Depends, HTTPException
 from models.base import BaseMovie
 from services.persons import PersonService, get_person_service
@@ -13,7 +13,7 @@ router = APIRouter()
 class Person(BaseMovie):
     full_name: str
     role: str
-    film_ids: list[uuid.UUID]
+    film_ids: list
 
 
 @router.get('/search', response_model=List[Person])
@@ -36,10 +36,10 @@ async def person_details(person_id: str, person_service: PersonService = Depends
     return Person(id=person.id, full_name=person.full_name, role=person.role, film_ids=person.film_ids)
 
 
-@router.get('/{person_id}/film', response_model=List[Film])
-async def person_film(person_id: str, person_service: PersonService = Depends(get_person_service)) -> List[Film]:
+@router.get('/{person_id}/film', response_model=List[Film_API])
+async def person_film(person_id: str, person_service: PersonService = Depends(get_person_service)) -> List[Film_API]:
     films = await person_service.get_film_list_by_id(person_id)
     if not films:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='person not found')
 
-    return [Film(id=film.id, title=film.title, imdb_rating=film.imdb_rating) for film in films]
+    return [Film_API(id=film.id, title=film.title, imdb_rating=film.imdb_rating) for film in films]

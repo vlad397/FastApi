@@ -20,7 +20,8 @@ async def genre_list(
 ) -> list:
     genres = await genres_services.get_all()
 
-    return genres
+
+    return [Genre(uuid=genre['id'], name=genre['name']) for genre in genres]
 
 
 @router.get('/{genre_id}', response_model=Genre)
@@ -34,4 +35,4 @@ async def genre_details(
             status_code=HTTPStatus.NOT_FOUND, detail='genre not found'
         )
 
-    return Genre(uuid=genre.uuid, name=genre.name)
+    return Genre(uuid=genre.id, name=genre.name)
