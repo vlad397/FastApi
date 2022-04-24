@@ -2,8 +2,10 @@ import os
 from logging import config as logging_config
 
 from core.logger import LOGGING
+from dotenv import load_dotenv
 
 logging_config.dictConfig(LOGGING)
+load_dotenv()
 
 PROJECT_NAME = os.getenv('PROJECT_NAME', 'movies')
 
