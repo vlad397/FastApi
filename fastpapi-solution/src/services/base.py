@@ -77,23 +77,6 @@ class BaseListService(SimpleService):
     Использует дженерик для работы с моделью."""
     instance = T
 
-    async def get_all(self, **kwargs) -> list:
-        '''Основная функция выдачи информации по всем жанрам'''
-        # Ищем в кэше
-        redis_key = ''
-        instances = await self._instance_from_cache(redis_key)
-
-        if not instances:
-            # В кэше нет - ищем в es
-            instances = await self._get_instance_from_elastic()
-            # И сохраняем в кэше
-            await self._put_instance_to_cache(instances, redis_key)
-        return instances
-
-    async def _get_instance_from_elastic(self, **kwargs) -> list:
-        '''Функция поиска в es'''
-        pass
-
     async def _instance_from_cache(self, key: str) -> Optional[list]:
         """Поиск фильмов в кэше"""
         data = await self.redis.get(key)

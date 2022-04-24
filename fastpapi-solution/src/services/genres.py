@@ -19,7 +19,19 @@ class GenreService(BaseService):
 
 class GenresServices(BaseListService):
     '''Выдача информации по всем жанрам'''
-    instance = Genre
+
+    async def get_all(self, **kwargs) -> list:
+        '''Основная функция выдачи информации по всем жанрам'''
+        # Ищем в кэше
+        redis_key = 'genres'
+        instances = await self._instance_from_cache(redis_key)
+
+        if not instances:
+            # В кэше нет - ищем в es
+            instances = await self._get_instance_from_elastic()
+            # И сохраняем в кэше
+            await self._put_instance_to_cache(instances, redis_key)
+        return instances
 
     async def _get_instance_from_elastic(self) -> list:
         '''Функция поиска жанров в es'''

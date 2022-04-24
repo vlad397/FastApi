@@ -16,21 +16,6 @@ class FilmService(BaseService):
     """Выдача информации по фильму по uuid"""
     instance = Film
 
-    async def get_by_id(self, film_id: str) -> Optional[Film]:
-        """Основная функция поиска фильма по uuid"""
-        # Пробуем взять фильм из кэша
-        film = await self._instance_from_cache(film_id)
-        if not film:
-            # Если фильма нет, то ищем его в elasticsearch
-            film = await self._get_instance_from_elastic(film_id)
-            if not film:
-                # Если фильма нигде нет, возвращаем None
-                return None
-            # Если фильм нашелся в elasticsearch, то сохраняем в кэше
-            await self._put_instance_to_cache(film)
-
-        return film
-
 
 class FilmsServices(BaseListService):
     """Выдача информации по всем фильмам"""
