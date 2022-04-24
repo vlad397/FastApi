@@ -6,17 +6,14 @@ from db.elastic import get_elastic
 from db.redis import get_redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
+import json
 
 FILM_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
 
 T = TypeVar("T", bound="BaseMovie")
 
 
-class BaseService:
-    """Базовый сервис. Включает подключение к редису и эластику, и основные методы.
-    Использует дженерик для работы с моделью."""
-    instance = T
-
+class SimpleService:
     def __init__(self, redis: Redis, elastic: AsyncElasticsearch):
         self.redis = redis
         self.elastic = elastic
@@ -26,6 +23,12 @@ class BaseService:
         if page_number == 1:
             return 0
         return page_size * (page_number - 1)
+
+
+class BaseService(SimpleService):
+    """Базовый сервис. Включает подключение к редису и эластику, и основные методы.
+    Использует дженерик для работы с моделью."""
+    instance = T
 
     # get_by_id возвращает объект фильма. Он опционален, так как фильм может отсутствовать в базе
     async def get_by_id(self, base_id: str) -> Optional[T]:
@@ -42,8 +45,6 @@ class BaseService:
 
         return instance
 
-    async def get_list(self, sort: str) -> Optional[List[T]]:
-        return []
 
     async def _get_instance_from_elastic(self, instance_id: str) -> Optional[T]:
         try:
@@ -71,9 +72,54 @@ class BaseService:
         await self.redis.set(instance.id, instance.json(), expire=FILM_CACHE_EXPIRE_IN_SECONDS)
 
 
+class BaseListService(SimpleService):
+    """Базовый сервис. Включает подключение к редису и эластику, и основные методы.
+    Использует дженерик для работы с моделью."""
+    instance = T
+
+    async def get_all(self, **kwargs) -> list:
+        '''Основная функция выдачи информации по всем жанрам'''
+        # Ищем в кэше
+        redis_key = ''
+        instances = await self._instance_from_cache(redis_key)
+
+        if not instances:
+            # В кэше нет - ищем в es
+            instances = await self._get_instance_from_elastic()
+            # И сохраняем в кэше
+            await self._put_instance_to_cache(instances, redis_key)
+        return instances
+
+    async def _get_instance_from_elastic(self, **kwargs) -> list:
+        '''Функция поиска в es'''
+        pass
+
+    async def _instance_from_cache(self, key: str) -> Optional[list]:
+        """Поиск фильмов в кэше"""
+        data = await self.redis.get(key)
+        if not data:
+            return None
+        data = json.loads(data)
+
+        return data
+
+    async def _put_instance_to_cache(self, instance: list, redis_key: str):
+        """Сохранение фильмов в кэше"""
+        await self.redis.set(
+            redis_key, json.dumps(instance),
+            expire=FILM_CACHE_EXPIRE_IN_SECONDS
+        )
+
 @lru_cache()
 def get_base_service(
         redis: Redis = Depends(get_redis),
         elastic: AsyncElasticsearch = Depends(get_elastic)
 ) -> BaseService:
     return BaseService(redis, elastic)
+
+@lru_cache()
+def get_base_list_service(
+        redis: Redis = Depends(get_redis),
+        elastic: AsyncElasticsearch = Depends(get_elastic)
+) -> BaseListService:
+    return BaseListService(redis, elastic)

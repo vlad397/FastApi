@@ -7,73 +7,33 @@ from db.elastic import get_elastic
 from db.redis import get_redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
-from models.film import Film_Detail, Films
+from models.films import Film
+from services.base import BaseService, BaseListService
+from pydantic import BaseModel
 
-FILM_CACHE_EXPIRE_IN_SECONDS = 60 * 5
 
-
-class FilmService:
+class FilmService(BaseService):
     """Выдача информации по фильму по uuid"""
+    instance = Film
 
-    def __init__(self, redis: Redis, elastic: AsyncElasticsearch):
-        self.redis = redis
-        self.elastic = elastic
-
-    async def get_by_id(self, film_id: str) -> Optional[Film_Detail]:
+    async def get_by_id(self, film_id: str) -> Optional[Film]:
         """Основная функция поиска фильма по uuid"""
         # Пробуем взять фильм из кэша
-        film = await self._film_from_cache(film_id)
+        film = await self._instance_from_cache(film_id)
         if not film:
             # Если фильма нет, то ищем его в elasticsearch
-            film = await self._get_film_from_elastic(film_id)
+            film = await self._get_instance_from_elastic(film_id)
             if not film:
                 # Если фильма нигде нет, возвращаем None
                 return None
             # Если фильм нашелся в elasticsearch, то сохраняем в кэше
-            await self._put_film_to_cache(film)
+            await self._put_instance_to_cache(film)
 
         return film
 
-    async def _get_film_from_elastic(
-            self, film_id: str
-    ) -> Optional[Film_Detail]:
-        """Функция поиска фильма в elasticsearch"""
-        try:
-            doc = await self.elastic.get('movies', film_id)
-        except NotFoundError:
-            return None
-        return Film_Detail(**doc['_source'])
 
-    async def _film_from_cache(self, film_id: str) -> Optional[Film_Detail]:
-        """Функция поиска фильма в кэше"""
-        data = await self.redis.get(film_id)
-        if not data:
-            return None
-
-        film = Film_Detail.parse_raw(data)
-        return film
-
-    async def _put_film_to_cache(self, film: Film_Detail):
-        """Функция сохранения фильма в кэше для быстрого ответа"""
-        await self.redis.set(
-            film.uuid, film.json(), expire=FILM_CACHE_EXPIRE_IN_SECONDS
-        )
-
-
-class FilmsServices:
+class FilmsServices(BaseListService):
     """Выдача информации по всем фильмам"""
-
-    def __init__(self, redis: Redis, elastic: AsyncElasticsearch):
-        self.redis = redis
-        self.elastic = elastic
-
-    def paginate_elastic(self, page_size: int, page_number: int) -> int:
-        """Пагинация ответа elasticsearch"""
-        if page_number == 1:
-            from_ = 0
-        else:
-            from_ = page_size * (page_number - 1)
-        return from_
 
     def get_elastic_query(
             self, query: Optional[str],
@@ -121,18 +81,19 @@ class FilmsServices:
             redis_key = reverse + str(page_number) + str(page_size) + genre
         else:
             redis_key = reverse + str(page_number) + str(page_size)
+        redis_key = 'films' + redis_key
         # Ищем фильмы в кэше
-        films = await self._films_from_cache('films' + redis_key)
+        films = await self._instance_from_cache(redis_key)
 
         if not films:
             # Если в кэше нет, то ищем в elasticsearch
-            films = await self._get_films_from_elastic(
+            films = await self._get_instance_from_elastic(
                 query, genre, reverse, page_size, page_number)
             # Сохраняем в кэше информацию из elasticsearch
-            await self._put_films_to_cache(films, redis_key)
+            await self._put_instance_to_cache(films, redis_key)
         return films
 
-    async def _get_films_from_elastic(
+    async def _get_instance_from_elastic(
             self, query: Optional[str], genre: Optional[str], reverse: str,
             page_size: int, page_number: int
     ) -> list:
@@ -149,27 +110,10 @@ class FilmsServices:
                 # В каждом фильме оставим поля согласно модели
                 # Объект модели нельзя сохранить в кэше,
                 # потому делаем json() и json.loads()
-                films_list.append(json.loads(Films(**doc['_source']).json()))
-
+                films_list.append(doc['_source'])
         except NotFoundError:
             return []
         return films_list
-
-    async def _films_from_cache(self, key: str) -> Optional[list]:
-        """Поиск фильмов в кэше"""
-        data = await self.redis.get(key)
-        if not data:
-            return None
-        data = json.loads(data)
-
-        return data
-
-    async def _put_films_to_cache(self, films: list, redis_key: str):
-        """Сохранение фильмов в кэше"""
-        await self.redis.set(
-            'films' + redis_key, json.dumps(films),
-            expire=FILM_CACHE_EXPIRE_IN_SECONDS
-        )
 
 
 @lru_cache

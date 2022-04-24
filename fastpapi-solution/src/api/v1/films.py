@@ -9,14 +9,14 @@ from services.films import (FilmService, FilmsServices, get_film_service,
 router = APIRouter()
 
 
-class Film(BaseModel):
-    """Упрощенный сериализатор фильма для списков."""
-    id: str
+class Film_API(BaseModel):
+    '''Упрощенный сериализатор фильма для списков'''
+    uuid: str
     title: str
     imdb_rating: float
 
 
-class Film_Detail(BaseModel):
+class Film_Detail_API(BaseModel):
     '''API модель для выдачи результата'''
     uuid: str
     title: str
@@ -48,22 +48,25 @@ async def film_list(
         query, genre, reverse, page_size, page_number
     )
 
-    return films
+    return [Film_API(
+        uuid=film['id'], title=film['title'],
+        imdb_rating=film['imdb_rating']) for film in films
+    ]
 
 
-@router.get('/{film_id}', response_model=Film_Detail)
+@router.get('/{film_id}', response_model=Film_Detail_API)
 async def film_details(
         film_id: str,
         film_service: FilmService = Depends(get_film_service)
-) -> Film_Detail:
+) -> Film_Detail_API:
     film = await film_service.get_by_id(film_id)
     if not film:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail='film not found'
         )
 
-    return Film_Detail(
-        uuid=film.uuid, title=film.title,
+    return Film_Detail_API(
+        uuid=film.id, title=film.title,
         imdb_rating=film.imdb_rating, description=film.description,
         genre=film.genre, actors=film.actors, writers=film.writers,
         directors=film.directors

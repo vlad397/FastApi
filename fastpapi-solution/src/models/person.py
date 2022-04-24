@@ -9,4 +9,4 @@ class Person(BaseMovie):
 
     full_name: str
     role: str
-    film_ids: list[uuid.UUID]
+    film_ids: list

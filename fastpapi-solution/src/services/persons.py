@@ -2,7 +2,7 @@ from functools import lru_cache
 from typing import List, Optional
 
 from aioredis import Redis
-from api.v1.films import Film
+from api.v1.films import Film_API
 from db.elastic import get_elastic
 from db.redis import get_redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
@@ -17,7 +17,7 @@ person_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
 class PersonService(BaseService):
     instance = Person
 
-    async def get_film_list_by_id(self, base_id: str) -> Optional[List[Film]]:
+    async def get_film_list_by_id(self, base_id: str) -> Optional[List[Film_API]]:
         # Пытаемся получить данные из кеша, потому что оно работает быстрее
         instance = await self._instance_from_cache(base_id)
         if not instance:
