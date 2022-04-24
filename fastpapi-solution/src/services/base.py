@@ -1,12 +1,14 @@
+import json
 from functools import lru_cache
-from typing import List, Optional, TypeVar
+from typing import Dict, List, Optional, TypeVar, Union
 
 from aioredis import Redis
 from db.elastic import get_elastic
 from db.redis import get_redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
-import json
+from fastapi.encoders import jsonable_encoder
+from pydantic import parse_obj_as
 
 FILM_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
 
@@ -45,7 +47,6 @@ class BaseService(SimpleService):
 
         return instance
 
-
     async def _get_instance_from_elastic(self, instance_id: str) -> Optional[T]:
         try:
             doc = await self.elastic.get(index=self.instance.index, id=instance_id)
@@ -70,6 +71,63 @@ class BaseService(SimpleService):
         # https://redis.io/commands/set
         # pydantic позволяет сериализовать модель в json
         await self.redis.set(instance.id, instance.json(), expire=FILM_CACHE_EXPIRE_IN_SECONDS)
+
+
+class SearchServiceMixin(SimpleService):
+    instance = T
+
+    async def query_builder(self, query_str: str = None):
+        return {
+            "query": {
+                "query_string": {
+                    "query": query_str
+                }
+            }
+        }
+
+    async def search(self,
+                     query_str: str = None,
+                     page_number: Optional[int] = 1,
+                     page_size: Optional[int] = 50,
+                     **kwargs) -> Optional[List[T]]:
+        redis_key = f'{query_str};{page_number};{page_size}'
+
+        results = await self._get_search_from_cache(redis_key)
+        if not results:
+            results = await self._search_from_elastic(query_str)
+            if not results:
+                return None
+            await self._put_search_to_cache(redis_key, results)
+        return results
+
+    async def _search_from_elastic(self,
+                                   query_str: str = None,
+                                   page_number: Optional[int] = 1,
+                                   page_size: Optional[int] = 50,
+                                   **kwargs) -> Optional[List[T]]:
+        try:
+            query = await self.query_builder(query_str)
+            doc = await self.elastic.search(
+                index=self.instance.index,
+                query=query,
+                from_=self.paginate_elastic(page_size, page_number),
+                size=page_size)
+        except NotFoundError:
+            return None
+        return [self.instance(**hit.get('_source')) for hit in doc.get('hits').get('hits')]
+
+    async def _get_search_from_cache(self, redis_key: str) -> Optional[T]:
+        data = await self.redis.get(redis_key)
+        if not data:
+            return None
+
+        results = parse_obj_as(List[self.instance], json.loads(data))
+        return results
+
+    async def _put_search_to_cache(self, redis_key, results: List[T]):
+        await self.redis.set(redis_key,
+                             json.dumps(jsonable_encoder(results)),
+                             expire=FILM_CACHE_EXPIRE_IN_SECONDS)
 
 
 class BaseListService(SimpleService):
@@ -110,12 +168,14 @@ class BaseListService(SimpleService):
             expire=FILM_CACHE_EXPIRE_IN_SECONDS
         )
 
+
 @lru_cache()
 def get_base_service(
         redis: Redis = Depends(get_redis),
         elastic: AsyncElasticsearch = Depends(get_elastic)
 ) -> BaseService:
     return BaseService(redis, elastic)
+
 
 @lru_cache()
 def get_base_list_service(

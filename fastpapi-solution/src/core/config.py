@@ -17,3 +17,5 @@ ELASTIC_HOST = os.getenv('ELASTIC_HOST', '127.0.0.1')
 ELASTIC_PORT = int(os.getenv('ELASTIC_PORT', 9200))
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+DEBUG = os.environ.get('DEBUG', False) == 'True'

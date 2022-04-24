@@ -26,7 +26,8 @@ async def startup():
     elastic.es = AsyncElasticsearch(
         hosts=[f'{config.ELASTIC_HOST}:{config.ELASTIC_PORT}']
     )
-
+    if config.DEBUG:
+        await redis.redis.flushdb()
 
 @app.on_event('shutdown')
 async def shutdown():
