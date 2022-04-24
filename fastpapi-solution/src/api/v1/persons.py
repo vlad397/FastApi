@@ -5,12 +5,14 @@ from typing import List, Optional
 from api.v1.films import Film_API
 from fastapi import APIRouter, Depends, HTTPException
 from models.base import BaseMovie
+from pydantic import BaseModel
 from services.persons import PersonService, get_person_service
 
 router = APIRouter()
 
 
-class Person(BaseMovie):
+class Person(BaseModel):
+    uuid: str
     full_name: str
     role: str
     film_ids: list
@@ -21,10 +23,10 @@ async def person_search(person_service: PersonService = Depends(get_person_servi
                         query: Optional[str] = None,
                         page_number: Optional[int] = 1,
                         page_size: Optional[int] = 50) -> Optional[List[Person]]:
-    hits = await person_service.search_by_name(query, page_number, page_size)
+    hits = await person_service.search(query, page_number, page_size)
     if not hits:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='person not found')
-    return [Person(id=hit.id, full_name=hit.full_name, role=hit.role, film_ids=hit.film_ids) for hit in hits]
+    return [Person(uuid=hit.id, full_name=hit.full_name, role=hit.role, film_ids=hit.film_ids) for hit in hits]
 
 
 @router.get('/{person_id}', response_model=Person)
@@ -33,7 +35,7 @@ async def person_details(person_id: str, person_service: PersonService = Depends
     if not person:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='film not found')
 
-    return Person(id=person.id, full_name=person.full_name, role=person.role, film_ids=person.film_ids)
+    return Person(uuid=person.id, full_name=person.full_name, role=person.role, film_ids=person.film_ids)
 
 
 @router.get('/{person_id}/film', response_model=List[Film_API])
@@ -42,4 +44,4 @@ async def person_film(person_id: str, person_service: PersonService = Depends(ge
     if not films:
         raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail='person not found')
 
-    return [Film_API(id=film.id, title=film.title, imdb_rating=film.imdb_rating) for film in films]
+    return [Film_API(uuid=film.id, title=film.title, imdb_rating=film.imdb_rating) for film in films]

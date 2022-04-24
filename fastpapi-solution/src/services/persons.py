@@ -2,22 +2,22 @@ from functools import lru_cache
 from typing import List, Optional
 
 from aioredis import Redis
-from api.v1.films import Film_API
 from db.elastic import get_elastic
 from db.redis import get_redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
+from models.films import Film
 from models.person import Person
-from services.base import BaseService
+from services.base import BaseService, SearchServiceMixin
 from services.films import FilmService
 
 person_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
 
 
-class PersonService(BaseService):
+class PersonService(BaseService, SearchServiceMixin):
     instance = Person
 
-    async def get_film_list_by_id(self, base_id: str) -> Optional[List[Film_API]]:
+    async def get_film_list_by_id(self, base_id: str) -> Optional[List[Film]]:
         # Пытаемся получить данные из кеша, потому что оно работает быстрее
         instance = await self._instance_from_cache(base_id)
         if not instance:
@@ -34,29 +34,15 @@ class PersonService(BaseService):
 
         return films
 
-    async def search_by_name(self,
-                             query: Optional[str] = None,
-                             page_number: Optional[int] = 1,
-                             page_size: Optional[int] = 50) -> Optional[List[Person]]:
-
-        try:
-            doc = await self.elastic.search(
-                index=self.instance.index,
-                query={
-                    'match': {
-                        'full_name': {
-                            'query': query,
-                            'fuzziness': 'auto'
-                        }
-                    }
-                },
-                from_=self.paginate_elastic(page_size, page_number),
-                size=page_size)
-        except NotFoundError:
-            return None
-        if not doc:
-            return None
-        return [self.instance(**hit.get('_source')) for hit in doc.get('hits').get('hits')]
+    async def query_builder(self, query_str: str = None):
+        return {
+            'match': {
+                'full_name': {
+                    'query': query_str,
+                    'fuzziness': 'auto'
+                }
+            }
+        }
 
 
 @lru_cache()
