@@ -1,35 +1,20 @@
-from typing import Optional
+from typing import List, Optional, ClassVar
 
-import orjson
-from pydantic import BaseModel
-
-
-def orjson_dumps(v, *, default):
-    return orjson.dumps(v, default=default).decode()
+from models.base import BaseMovie
 
 
-class Film_Detail(BaseModel):
-    '''Модель для одного фильма'''
+class Film(BaseMovie):
+    """Модель для одного фильма"""
+
+    index: ClassVar[str] = 'movies'
+
     uuid: str
     title: str
     imdb_rating: float
     description: str
-    genre: list
-    actors: Optional[list]
-    writers: Optional[list]
-    directors: Optional[list]
-
-    class Config:
-        json_loads = orjson.loads
-        json_dumps = orjson_dumps
-
-
-class Films(BaseModel):
-    '''Модель для списка фильмов'''
-    uuid: str
-    title: str
-    imdb_rating: Optional[float]
-
-    class Config:
-        json_loads = orjson.loads
-        json_dumps = orjson_dumps
+    genre: List
+    actors: Optional[List]
+    writers: Optional[List]
+    directors: Optional[List]
+    actors_names: Optional[List[str]]
+    writers_names: Optional[List[str]]
