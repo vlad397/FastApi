@@ -17,12 +17,11 @@ T = TypeVar("T", bound="BaseMovie")
 
 def build_redis_key(*args, **kwargs):
     """Создание структурированного ключа Redis"""
-    index = args[0]
-    extra = ''
+    redis_key = ''
+    if args:
+        redis_key += '||'.join(args)
     for key, value in kwargs.items():
-        extra += f'||{key}::{value}'
-    redis_key = index + extra
-
+        redis_key += f'||{key}::{value}'
     return redis_key
 
 
@@ -46,9 +45,8 @@ class BaseService(SimpleService):
     # get_by_id возвращает объект фильма.
     # Он опционален, так как фильм может отсутствовать в базе
     async def get_by_id(self, base_id: str) -> Optional[T]:
-        redis_key = build_redis_key(self.instance.index, instance_id=base_id)
         # Пытаемся получить данные из кеша, потому что оно работает быстрее
-        instance = await self._instance_from_cache(redis_key)
+        instance = await self._instance_from_cache(base_id)
         if not instance:
             # Если фильма нет в кеше, то ищем его в Elasticsearch
             instance = await self._get_instance_from_elastic(base_id)
@@ -56,7 +54,7 @@ class BaseService(SimpleService):
                 # Если он отсутствует в ES, значит, фильма вообще нет в базе
                 return None
             # Сохраняем фильм  в кеш
-            await self._put_instance_to_cache(redis_key)
+            await self._put_instance_to_cache(instance)
 
         return instance
 
@@ -81,9 +79,11 @@ class BaseService(SimpleService):
         return instance
 
     async def _put_instance_to_cache(self, instance: T):
-        await self.redis.set(
-            instance, instance.json(), expire=FILM_CACHE_EXPIRE_IN_SECONDS
-        )
+        # Сохраняем данные о фильме, используя команду set
+        # Выставляем время жизни кеша — 5 минут
+        # https://redis.io/commands/set
+        # pydantic позволяет сериализовать модель в json
+        await self.redis.set(instance.id, instance.json(), expire=FILM_CACHE_EXPIRE_IN_SECONDS)
 
 
 class SearchServiceMixin(SimpleService):

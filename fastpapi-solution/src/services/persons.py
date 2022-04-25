@@ -20,7 +20,7 @@ class PersonService(BaseService, SearchServiceMixin):
     async def get_film_list_by_id(self, base_id: str) -> Optional[List[Film]]:
         redis_key = build_redis_key(self.instance.index, instance_id=base_id)
         # Пытаемся получить данные из кеша, потому что оно работает быстрее
-        instance = await self._instance_from_cache(redis_key)
+        instance = await self._instance_from_cache(base_id)
         if not instance:
             # Если фильма нет в кеше, то ищем его в Elasticsearch
             instance = await self._get_instance_from_elastic(base_id)
@@ -28,12 +28,10 @@ class PersonService(BaseService, SearchServiceMixin):
                 # Если он отсутствует в ES, значит, фильма вообще нет в базе
                 return None
             # Сохраняем фильм  в кеш
-            await self._put_instance_to_cache(redis_key)
+            await self._put_instance_to_cache(instance)
         film_ids = instance.film_ids
         film_service = FilmService(self.redis, self.elastic)
-        films = [await film_service.get_by_id(
-            str(film_id)
-        ) for film_id in film_ids]
+        films = [await film_service.get_by_id(str(film_id)) for film_id in film_ids]
 
         return films
 
