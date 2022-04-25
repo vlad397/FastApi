@@ -1,6 +1,7 @@
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
+from helpers import static_texts
 from models.response_models.genre import Genre
 from services.genres import (GenreService, GenresServices, get_genre_service,
                              get_genres_services)
@@ -25,7 +26,7 @@ async def genre_details(
     genre = await genre_service.get_by_id(genre_id)
     if not genre:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='genre not found'
+            status_code=HTTPStatus.NOT_FOUND, detail=static_texts.GENRE_404
         )
 
     return Genre(uuid=genre.id, name=genre.name)

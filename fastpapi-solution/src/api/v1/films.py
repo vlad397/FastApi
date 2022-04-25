@@ -2,6 +2,7 @@ from http import HTTPStatus
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
+from helpers import static_texts
 from models.response_models.films import Film_API, Film_Detail_API
 from services.films import (FilmService, FilmsServices, get_film_service,
                             get_films_services)
@@ -43,7 +44,7 @@ async def film_details(
     film = await film_service.get_by_id(film_id)
     if not film:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='film not found'
+            status_code=HTTPStatus.NOT_FOUND, detail=static_texts.FILM_404
         )
 
     return Film_Detail_API(

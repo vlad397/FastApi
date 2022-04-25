@@ -3,9 +3,9 @@ from typing import List, Optional
 
 from api.v1.films import Film_API
 from fastapi import APIRouter, Depends, HTTPException
+from helpers import static_texts
 from models.response_models.person import Person
 from services.persons import PersonService, get_person_service
-from helpers import static_texts
 
 router = APIRouter()
 
