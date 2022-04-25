@@ -2,13 +2,12 @@ from functools import lru_cache
 from typing import Optional
 
 from aioredis import Redis
-from elasticsearch import AsyncElasticsearch, NotFoundError
-from fastapi import Depends
-
 from db.elastic import get_elastic
 from db.redis import get_redis
+from elasticsearch import AsyncElasticsearch, NotFoundError
+from fastapi import Depends
 from models.films import Film
-from services.base import BaseListService, BaseService
+from services.base import BaseListService, BaseService, build_redis_key
 
 
 class FilmService(BaseService):
@@ -60,12 +59,20 @@ class FilmsServices(BaseListService):
         """Основная функция выдачи информации по фильмам"""
         # Создание составного ключа для хранения/поиска в кэше
         if query:
-            redis_key = reverse + str(page_number) + str(page_size) + query
+            redis_key = build_redis_key(
+                'films', reverse=reverse, page_number=str(page_number),
+                page_size=str(page_size), query=query
+            )
         elif genre:
-            redis_key = reverse + str(page_number) + str(page_size) + genre
+            redis_key = build_redis_key(
+                'films', reverse=reverse, page_number=str(page_number),
+                page_size=str(page_size), genre_id=genre
+            )
         else:
-            redis_key = reverse + str(page_number) + str(page_size)
-        redis_key = 'films' + redis_key
+            redis_key = build_redis_key(
+                'films', reverse=reverse,
+                page_number=str(page_number), page_size=str(page_size)
+            )
         # Ищем фильмы в кэше
         films = await self._instance_from_cache(redis_key)
 

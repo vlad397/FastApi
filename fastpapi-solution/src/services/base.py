@@ -3,18 +3,27 @@ from functools import lru_cache
 from typing import List, Optional, TypeVar
 
 from aioredis import Redis
+from db.elastic import get_elastic
+from db.redis import get_redis
 from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import Depends
 from fastapi.encoders import jsonable_encoder
 from pydantic import parse_obj_as
 
-from db.elastic import get_elastic
-from db.redis import get_redis
-from models.base import BaseMovie
-
 FILM_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
 
 T = TypeVar("T", bound="BaseMovie")
+
+
+def build_redis_key(*args, **kwargs):
+    """Создание структурированного ключа Redis"""
+    index = args[0]
+    extra = ''
+    for key, value in kwargs.items():
+        extra += f'||{key}::{value}'
+    redis_key = index + extra
+
+    return redis_key
 
 
 class SimpleService:
@@ -37,8 +46,9 @@ class BaseService(SimpleService):
     # get_by_id возвращает объект фильма.
     # Он опционален, так как фильм может отсутствовать в базе
     async def get_by_id(self, base_id: str) -> Optional[T]:
+        redis_key = build_redis_key(self.instance.index, instance_id=base_id)
         # Пытаемся получить данные из кеша, потому что оно работает быстрее
-        instance = await self._instance_from_cache(base_id)
+        instance = await self._instance_from_cache(redis_key)
         if not instance:
             # Если фильма нет в кеше, то ищем его в Elasticsearch
             instance = await self._get_instance_from_elastic(base_id)
@@ -46,7 +56,7 @@ class BaseService(SimpleService):
                 # Если он отсутствует в ES, значит, фильма вообще нет в базе
                 return None
             # Сохраняем фильм  в кеш
-            await self._put_instance_to_cache(instance)
+            await self._put_instance_to_cache(redis_key)
 
         return instance
 
@@ -72,7 +82,7 @@ class BaseService(SimpleService):
 
     async def _put_instance_to_cache(self, instance: T):
         await self.redis.set(
-            instance.id, instance.json(), expire=FILM_CACHE_EXPIRE_IN_SECONDS
+            instance, instance.json(), expire=FILM_CACHE_EXPIRE_IN_SECONDS
         )
 
 
@@ -93,8 +103,10 @@ class SearchServiceMixin(SimpleService):
                      page_number: Optional[int] = 1,
                      page_size: Optional[int] = 50,
                      **kwargs) -> Optional[List[T]]:
-        redis_key = (f'{self.instance.index}|'
-                     f'{query_str}|{page_number}|{page_size}')
+        redis_key = build_redis_key(
+            self.instance.index, query=query_str,
+            page_number=str(page_number), page_size=str(page_size)
+        )
 
         results = await self._get_search_from_cache(redis_key)
         if not results:

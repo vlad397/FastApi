@@ -4,7 +4,7 @@ from models.base import BaseMovie
 
 
 class Film(BaseMovie):
-    '''Полная модель фильма'''
+    """Полная модель фильма"""
     index: ClassVar[str] = 'movies'
 
     title: str

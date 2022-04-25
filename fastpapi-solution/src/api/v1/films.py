@@ -2,31 +2,11 @@ from http import HTTPStatus
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
-
+from models.response_models.films import Film_API, Film_Detail_API
 from services.films import (FilmService, FilmsServices, get_film_service,
                             get_films_services)
 
 router = APIRouter()
-
-
-class Film_API(BaseModel):
-    '''Упрощенный сериализатор фильма для списков'''
-    uuid: str
-    title: str
-    imdb_rating: float
-
-
-class Film_Detail_API(BaseModel):
-    '''API модель для выдачи результата'''
-    uuid: str
-    title: str
-    imdb_rating: float
-    description: str
-    genre: list
-    actors: Optional[list]
-    writers: Optional[list]
-    directors: Optional[list]
 
 
 @router.get('/')
