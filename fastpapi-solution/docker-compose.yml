@@ -16,6 +16,8 @@ services:
     environment:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms200m -Xmx200m
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
 
   api:
     build: .
@@ -42,3 +44,5 @@ services:
 volumes:
   cache:
     driver: local
+  esdata:
+    external: true
