@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 from api.v1.films import Film_API
 from services.persons import PersonService, get_person_service
+from helpers import static_texts
 
 router = APIRouter()
 
@@ -27,7 +28,7 @@ async def person_search(
     hits = await person_service.search(query, page_number, page_size)
     if not hits:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='person not found'
+            status_code=HTTPStatus.NOT_FOUND, detail=static_texts.PERSON_404
         )
     return [Person(
         uuid=hit.id, full_name=hit.full_name,
@@ -42,7 +43,7 @@ async def person_details(
     person = await person_service.get_by_id(person_id)
     if not person:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='film not found'
+            status_code=HTTPStatus.NOT_FOUND, detail=static_texts.FILM_404
         )
 
     return Person(
@@ -59,7 +60,7 @@ async def person_film(
     films = await person_service.get_film_list_by_id(person_id)
     if not films:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail='person not found'
+            status_code=HTTPStatus.NOT_FOUND, detail=static_texts.FILM_404
         )
 
     return [Film_API(
