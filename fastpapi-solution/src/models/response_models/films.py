@@ -19,4 +19,4 @@ class Film_Detail_API(BaseResponse):
     genre: list
     actors: Optional[list]
     writers: Optional[list]
-    directors: Optional[list]
+    director: Optional[list]
