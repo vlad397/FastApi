@@ -138,5 +138,582 @@
             }
           ]
         }
+    },
+    {
+      "_index": "movies",
+      "_id": "22d50530-14d5-483e-a063-246e92c8c14f",
+      "_score": 0,
+      "_source": {
+        "id": "22d50530-14d5-483e-a063-246e92c8c14f",
+        "title": "Lick the Star",
+        "description": "A clique of school girls devise a secret plan that they code-name \"Lick the Star\".",
+        "imdb_rating": 6,
+        "genre": [
+          {
+            "id": "1cacff68-643e-4ddd-8f57-84b62538081a",
+            "name": "Drama"
+          },
+          {
+            "id": "a886d0ec-c3f3-4b16-b973-dedcf5bfa395",
+            "name": "Short"
+          }
+        ],
+        "director": [
+          "Sofia Coppola"
+        ],
+        "actors_names": [
+          "Audrey Kelly",
+          "Christina Turley",
+          "Julia Vanderham",
+          "Lindsy Drummer"
+        ],
+        "writers_names": [
+          "Sofia Coppola",
+          "Stephanie Hayman"
+        ],
+        "actors": [
+          {
+            "id": "776b677a-42c0-451f-8f26-0edc8fab6ee0",
+            "name": "Lindsy Drummer"
+          },
+          {
+            "id": "8be9d292-2cea-40c3-b203-e0d6ecab0c2b",
+            "name": "Audrey Kelly"
+          },
+          {
+            "id": "aa971e1f-a9d7-4f17-9756-c3cada342e59",
+            "name": "Christina Turley"
+          },
+          {
+            "id": "ec05336f-17e8-4051-9a23-206691aa369c",
+            "name": "Julia Vanderham"
+          }
+        ],
+        "writers": [
+          {
+            "id": "4227bd33-7715-40dc-9fc1-33dc3dc2bfa1",
+            "name": "Stephanie Hayman"
+          },
+          {
+            "id": "905b6088-5667-457f-8c7b-83d95a9ed160",
+            "name": "Sofia Coppola"
+          }
+        ]
+      }
+    },
+    {
+      "_index": "movies",
+      "_id": "82297925-80cc-4c47-b6cf-6b5e06e23b70",
+      "_score": 0,
+      "_source": {
+        "id": "82297925-80cc-4c47-b6cf-6b5e06e23b70",
+        "title": "Star Trek V: The Final Frontier",
+        "description": "When the newly-christened starship Enterprise's shakedown cruise goes poorly, Captain Kirk and crew put her into Spacedock for repairs. But an urgent mission interrupts their Earth-bound shore leave. A renegade Vulcan named Sybok has taken three ambassadors hostage on Nimbus III, the Planet of Galactic Peace. This event also attracts the attention of a Klingon captain who wants to make a name for himself and sets out to pursue the Enterprise. Sybok's ragtag army captures the Enterprise and takes her on a journey to the center of the galaxy in search of the Supreme Being.",
+        "imdb_rating": 5.5,
+        "genre": [
+          {
+            "id": "120a21cf-9097-479e-904a-13dd7198c1dd",
+            "name": "Adventure"
+          },
+          {
+            "id": "3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff",
+            "name": "Action"
+          },
+          {
+            "id": "526769d7-df18-4661-9aa6-49ed24e9dfd8",
+            "name": "Thriller"
+          },
+          {
+            "id": "6c162475-c7ed-4461-9184-001ef3d9f26e",
+            "name": "Sci-Fi"
+          },
+          {
+            "id": "b92ef010-5e4c-4fd0-99d6-41b6456272cd",
+            "name": "Fantasy"
+          }
+        ],
+        "director": [
+          "William Shatner"
+        ],
+        "actors_names": [
+          "DeForest Kelley",
+          "James Doohan",
+          "Leonard Nimoy",
+          "William Shatner"
+        ],
+        "writers_names": [
+          "David Loughery",
+          "Gene Roddenberry",
+          "Harve Bennett",
+          "William Shatner"
+        ],
+        "actors": [
+          {
+            "id": "5a3d0299-2df2-4070-9fda-65ff4dfa863c",
+            "name": "Leonard Nimoy"
+          },
+          {
+            "id": "807ce9c3-6294-485c-803a-1975066f239f",
+            "name": "James Doohan"
+          },
+          {
+            "id": "836bb95b-6db8-4418-a110-f41663b1c025",
+            "name": "DeForest Kelley"
+          },
+          {
+            "id": "9758b894-57d7-465d-b657-c5803dd5b7f7",
+            "name": "William Shatner"
+          }
+        ],
+        "writers": [
+          {
+            "id": "1a84b0ac-ff8f-4169-a14b-7393acea8ddd",
+            "name": "David Loughery"
+          },
+          {
+            "id": "58411ec0-c40a-43da-95e3-0adc74b7e7f6",
+            "name": "Harve Bennett"
+          },
+          {
+            "id": "6960e2ca-889f-41f5-b728-1e7313e54d6c",
+            "name": "Gene Roddenberry"
+          },
+          {
+            "id": "9758b894-57d7-465d-b657-c5803dd5b7f7",
+            "name": "William Shatner"
+          }
+        ]
+      }
+    },
+    {
+      "_index": "movies",
+      "_id": "4b6977e2-b3db-4f04-b83e-f091c6fcd49c",
+      "_score": 0,
+      "_source": {
+        "id": "4b6977e2-b3db-4f04-b83e-f091c6fcd49c",
+        "title": "Brightest Star",
+        "description": "After the heartbreaking end of his first love, a recent college graduate sets out to win back the girl of his dreams only to discover a greater journey awaits him.",
+        "imdb_rating": 5.1,
+        "genre": [
+          {
+            "id": "1cacff68-643e-4ddd-8f57-84b62538081a",
+            "name": "Drama"
+          },
+          {
+            "id": "237fd1e4-c98e-454e-aa13-8a13fb7547b5",
+            "name": "Romance"
+          },
+          {
+            "id": "5373d043-3f41-4ea8-9947-4b746c601bbd",
+            "name": "Comedy"
+          }
+        ],
+        "director": [
+          "Maggie Kiley"
+        ],
+        "actors_names": [
+          "Alex Kaluzhsky",
+          "Chris Lowell",
+          "Jessica Szohr",
+          "Rose McIver"
+        ],
+        "writers_names": [
+          "Maggie Kiley",
+          "Matthew Mullen"
+        ],
+        "actors": [
+          {
+            "id": "1f323398-4bb1-4a00-9dfa-f12a730ae67a",
+            "name": "Rose McIver"
+          },
+          {
+            "id": "2f094f6a-4da5-4045-9225-40a3c3de7b1d",
+            "name": "Chris Lowell"
+          },
+          {
+            "id": "5820071b-4013-4fa8-b5e7-4c0696c2ee8b",
+            "name": "Jessica Szohr"
+          },
+          {
+            "id": "97484370-08a0-4944-9564-6d957d78a85c",
+            "name": "Alex Kaluzhsky"
+          }
+        ],
+        "writers": [
+          {
+            "id": "2620e673-3251-470e-830b-3d123bccd882",
+            "name": "Matthew Mullen"
+          },
+          {
+            "id": "6785f113-f395-4140-87e2-8587096e5be6",
+            "name": "Maggie Kiley"
+          }
+        ]
+      }
+    },
+    {
+      "_index": "movies",
+      "_id": "1d811246-a405-42da-b34e-599bd10f7aec",
+      "_score": 0,
+      "_source": {
+        "id": "1d811246-a405-42da-b34e-599bd10f7aec",
+        "title": "Star Wars: The Force and the Fury",
+        "description": "A Jedi crash lands on a barren planet and is pursued by a mysterious Sith who seems to know him.",
+        "imdb_rating": 4.4,
+        "genre": [
+          {
+            "id": "3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff",
+            "name": "Action"
+          },
+          {
+            "id": "a886d0ec-c3f3-4b16-b973-dedcf5bfa395",
+            "name": "Short"
+          }
+        ],
+        "director": [
+          "Jason Satterlund"
+        ],
+        "actors_names": [
+          "Aris Juson",
+          "Deborah Lee Smith"
+        ],
+        "writers_names": [],
+        "actors": [
+          {
+            "id": "59ae3500-84be-49d3-b43e-7269ec9b0c6c",
+            "name": "Deborah Lee Smith"
+          },
+          {
+            "id": "9f12a178-46c3-449a-890b-fb1970e4e738",
+            "name": "Aris Juson"
+          }
+        ],
+        "writers": []
+      }
+    },
+    {
+      "_index": "movies",
+      "_id": "78ff9d2c-4b31-495c-a2b5-07078fdae8e0",
+      "_score": 0,
+      "_source": {
+        "id": "78ff9d2c-4b31-495c-a2b5-07078fdae8e0",
+        "title": "Star Wars: Threads of Destiny",
+        "description": "94 years after The Battle of Yavin, the New Republic has been resurrected and democracy once again rules the galaxy. The Jedi Order is reestablished on the planet Yavin 4, and has continued to train new Jedi Knights in the art of peace and justice. But all is not peaceful in this new world. With the fall of the Dark Empire, the ancient Skenvi Empire now comes out of the shadow to make its move. The Skenvi now oppose the New Republic for control over the galaxy with their aggressively growing empire. The Skenvi seek to seize control of all the galaxy's most valuable resources to cripple their enemies. And if a planet refuses to join them, they have been known to take very aggressive actions. Caught in between this struggle over the fate of the galaxy is the little planet of Coreign. The planet possesses a very powerful resource that would greatly favor the side that has access to it if a galactic war was to emerge. In its eagerness to gain access to Coreign's resources, the Skenvi Empire sends its most infamous negotiator, Lord Siege. He is a man who is known throughout the galaxy for seeing that the Skenvi Empire gets what it wants by all means necessary. The New Republic sends two of its Jedi ambassadors, Master Soran Darr and his padawan, Raven Darkham.",
+        "imdb_rating": 4,
+        "genre": [
+          {
+            "id": "120a21cf-9097-479e-904a-13dd7198c1dd",
+            "name": "Adventure"
+          },
+          {
+            "id": "3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff",
+            "name": "Action"
+          },
+          {
+            "id": "6c162475-c7ed-4461-9184-001ef3d9f26e",
+            "name": "Sci-Fi"
+          }
+        ],
+        "director": [
+          "Rasmus Tirzitis"
+        ],
+        "actors_names": [
+          "Carolina Neurath",
+          "Karl Lindqvist",
+          "Patrik Hont",
+          "Stephanie Douglas Anderberg"
+        ],
+        "writers_names": [
+          "Jeffrey Long",
+          "Matthew Davis",
+          "Michael Banno",
+          "Rasmus Tirzitis",
+          "Steven Parker"
+        ],
+        "actors": [
+          {
+            "id": "8a1bb4d2-ee73-4329-b62f-f55509b117d2",
+            "name": "Carolina Neurath"
+          },
+          {
+            "id": "b0c5c419-73bf-436f-9fcd-68d7d6e9b0a1",
+            "name": "Patrik Hont"
+          },
+          {
+            "id": "bc6bf2fe-cbf9-46ae-94b5-84ed663f4371",
+            "name": "Karl Lindqvist"
+          },
+          {
+            "id": "c9584484-4585-42f1-8e30-e2b5f4993dbe",
+            "name": "Stephanie Douglas Anderberg"
+          }
+        ],
+        "writers": [
+          {
+            "id": "08b369d9-5448-4def-83e3-33bde45cf261",
+            "name": "Michael Banno"
+          },
+          {
+            "id": "5398f5f8-23cc-453c-ace3-55e93f84e27c",
+            "name": "Steven Parker"
+          },
+          {
+            "id": "53eae1dd-a82b-4561-817c-4732e06a0226",
+            "name": "Matthew Davis"
+          },
+          {
+            "id": "58ed700d-4e64-49cd-a89f-b858d9bd399c",
+            "name": "Rasmus Tirzitis"
+          },
+          {
+            "id": "f5897024-673d-448c-96af-f6eeb859fb65",
+            "name": "Jeffrey Long"
+          }
+        ]
+      }
+    },
+    {
+      "_index": "movies",
+      "_id": "40340129-96e8-49ce-a45d-2d25d17be48a",
+      "_score": 0,
+      "_source": {
+        "id": "40340129-96e8-49ce-a45d-2d25d17be48a",
+        "title": "Star Leaf",
+        "description": "Some Highs Are Out of this World. Star Leaf is a sci-fi thriller about an extra-terrestrial form of marijuana discovered in the Olympic forests. The main character is a veteran of the Afghanistan war, and the film has PTSD and its treatment with cannabis as an underlying theme. Shot entirely on Washington's Olympic Peninsula, the movie stars Julian Gavilanes and Russell Hodgkinson of Sy-Fy's Z-Nation.",
+        "imdb_rating": 3.6,
+        "genre": [
+          {
+            "id": "526769d7-df18-4661-9aa6-49ed24e9dfd8",
+            "name": "Thriller"
+          },
+          {
+            "id": "6c162475-c7ed-4461-9184-001ef3d9f26e",
+            "name": "Sci-Fi"
+          },
+          {
+            "id": "f39d7b6d-aef2-40b1-aaf0-cf05e7048011",
+            "name": "Horror"
+          }
+        ],
+        "director": [
+          "Richard Cranor"
+        ],
+        "actors_names": [
+          "Julian Gavilanes",
+          "Kevin Jolly",
+          "Richard Cranor",
+          "Russell Hodgkinson"
+        ],
+        "writers_names": [
+          "Hugh Berry",
+          "Richard Cranor"
+        ],
+        "actors": [
+          {
+            "id": "26d2f652-bc24-4224-b71a-193ac7e42a22",
+            "name": "Julian Gavilanes"
+          },
+          {
+            "id": "2b09609b-6765-4cbc-9ab4-b30d957e973a",
+            "name": "Kevin Jolly"
+          },
+          {
+            "id": "cb6a6cf8-7e2c-48a3-845f-969a964f7b7e",
+            "name": "Russell Hodgkinson"
+          },
+          {
+            "id": "e6c82bd7-d62b-4eac-a25e-a49ca883ccf3",
+            "name": "Richard Cranor"
+          }
+        ],
+        "writers": [
+          {
+            "id": "e234deb3-325e-4f38-8950-0e24fc940007",
+            "name": "Hugh Berry"
+          },
+          {
+            "id": "e6c82bd7-d62b-4eac-a25e-a49ca883ccf3",
+            "name": "Richard Cranor"
+          }
+        ]
+      }
+    },
+    {
+      "_index": "movies",
+      "_id": "beb9019c-2d30-44e4-a6b5-4ff27c5759b7",
+      "_score": 0,
+      "_source": {
+        "id": "beb9019c-2d30-44e4-a6b5-4ff27c5759b7",
+        "title": "Invasion of the Star Creatures",
+        "description": "A pair of comical soldiers (Robert Ball and Frankie Ray) investigate a mysterious crater in an atomic detonation area and discover several beautiful alien vixens (Dolores Reed and Gloria Victor) who plan to conquer the world using an army of vegetable monsters.",
+        "imdb_rating": 3,
+        "genre": [
+          {
+            "id": "5373d043-3f41-4ea8-9947-4b746c601bbd",
+            "name": "Comedy"
+          },
+          {
+            "id": "6c162475-c7ed-4461-9184-001ef3d9f26e",
+            "name": "Sci-Fi"
+          }
+        ],
+        "director": [
+          "Bruno VeSota"
+        ],
+        "actors_names": [
+          "Dolores Reed",
+          "Frankie Ray",
+          "Gloria Victor",
+          "Robert Ball"
+        ],
+        "writers_names": [
+          "Jonathan Haze"
+        ],
+        "actors": [
+          {
+            "id": "1e6df61b-0859-40d1-ac67-22d093987d3b",
+            "name": "Frankie Ray"
+          },
+          {
+            "id": "2b677381-310b-4950-904c-517002927ee1",
+            "name": "Dolores Reed"
+          },
+          {
+            "id": "62d8e822-105b-4930-8733-586f8eb2dabd",
+            "name": "Gloria Victor"
+          },
+          {
+            "id": "e1bd7098-73fb-4399-a79b-b5b99d719a55",
+            "name": "Robert Ball"
+          }
+        ],
+        "writers": [
+          {
+            "id": "aed21083-15dc-4e47-8d1e-63e52be9f6f0",
+            "name": "Jonathan Haze"
+          }
+        ]
+      }
+    },
+    {
+      "_index": "movies",
+      "_id": "7f28af8a-c629-4af0-b87b-39368a5b8464",
+      "_score": 0,
+      "_source": {
+        "id": "7f28af8a-c629-4af0-b87b-39368a5b8464",
+        "title": "Phantasy Star IV: The End of the Millennium",
+        "description": "NULL",
+        "imdb_rating": 9,
+        "genre": [
+          {
+            "id": "b92ef010-5e4c-4fd0-99d6-41b6456272cd",
+            "name": "Fantasy"
+          }
+        ],
+        "director": [
+          "Kiyoshi Takeuchi",
+          "Rieko Kodama",
+          "Tohru Yoshida"
+        ],
+        "actors_names": [],
+        "writers_names": [
+          "Akinori Nishiyama",
+          "Tohru Yoshida"
+        ],
+        "actors": [],
+        "writers": [
+          {
+            "id": "6aeb7a8b-4175-42ea-a43c-a4f5a829a049",
+            "name": "Tohru Yoshida"
+          },
+          {
+            "id": "82b37126-e13d-4200-bad9-9d32a19d9eda",
+            "name": "Akinori Nishiyama"
+          }
+        ]
+      }
+    },
+    {
+      "_index": "movies",
+      "_id": "2e5561a2-bb7f-48d3-8249-fb668db6014a",
+      "_score": 0,
+      "_source": {
+        "id": "2e5561a2-bb7f-48d3-8249-fb668db6014a",
+        "title": "Lunar: The Silver Star",
+        "description": "From the village of Burg, a teenager named Alex sets out to become the fabled guardian of the goddess Althena...the Dragonmaster. Along with his girlfriend Luna, and several friends they meet along the journey, they soon discover that the happy world of Lunar is on the verge of Armageddon. As Dragonmaster, Alex could save it. As a ruthless and powerful sorceror is about to play his hand, will Alex and company succeed in their quest before all is lost? And is his girlfriend Luna involved in these world shattering events? Play along and find out.",
+        "imdb_rating": 9.2,
+        "genre": [
+          {
+            "id": "120a21cf-9097-479e-904a-13dd7198c1dd",
+            "name": "Adventure"
+          },
+          {
+            "id": "3d8d9bf5-0d90-4353-88ba-4ccc5d2c07ff",
+            "name": "Action"
+          },
+          {
+            "id": "5373d043-3f41-4ea8-9947-4b746c601bbd",
+            "name": "Comedy"
+          }
+        ],
+        "director": [
+          "Hiroyuki Koyama",
+          "Victor Ireland",
+          "Yoichi Miyaji"
+        ],
+        "actors_names": [
+          "Ashley Parker Angel",
+          "Jackie Powers",
+          "Nancy Davis",
+          "Rhonda Gibson"
+        ],
+        "writers_names": [
+          "Kei Shigema",
+          "Takashi Hino",
+          "Toshio Akashi",
+          "Toshiyuki Kubooka",
+          "Victor Ireland"
+        ],
+        "actors": [
+          {
+            "id": "8b223e9f-4782-489c-a277-80375aafdced",
+            "name": "Ashley Parker Angel"
+          },
+          {
+            "id": "8fc70fc7-e7bf-42f7-86f5-4ab42398f77f",
+            "name": "Nancy Davis"
+          },
+          {
+            "id": "da58d5a9-d644-4b7d-9fb3-4b05cac13752",
+            "name": "Rhonda Gibson"
+          },
+          {
+            "id": "ea34a289-4167-4a9d-99f1-a2ced837fa16",
+            "name": "Jackie Powers"
+          }
+        ],
+        "writers": [
+          {
+            "id": "1f95b24c-c2e1-4fde-9c84-66e769b1a112",
+            "name": "Victor Ireland"
+          },
+          {
+            "id": "2904977a-de83-4322-9d73-53e9ac0fb119",
+            "name": "Takashi Hino"
+          },
+          {
+            "id": "6c2203bd-5048-4481-a0c3-dee30a854496",
+            "name": "Kei Shigema"
+          },
+          {
+            "id": "a112b814-4756-4ec2-bb4c-a97743ee197f",
+            "name": "Toshiyuki Kubooka"
+          },
+          {
+            "id": "f502ccaa-3188-4401-9c53-6270f1688a5c",
+            "name": "Toshio Akashi"
+          }
+        ]
+      }
     }
 ]

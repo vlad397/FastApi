@@ -1,17 +1,16 @@
-import aiohttp
 import asyncio
-import pytest
 import json
-import aiofiles
-
-from typing import Optional
 from dataclasses import dataclass
-from multidict import CIMultiDictProxy
+from typing import Optional
+
+import aiohttp
+import aioredis
+import pytest
 from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
+from multidict import CIMultiDictProxy
+
 from . import settings
-
-
 
 
 @dataclass
@@ -20,13 +19,23 @@ class HTTPResponse:
     headers: CIMultiDictProxy[str]
     status: int
 
-      
+
 @pytest.fixture(scope='session')
 async def es_client():
-    client = AsyncElasticsearch(hosts='127.0.0.1:9200')
+    client = AsyncElasticsearch(hosts=f'{settings.ES_HOST}:{settings.ES_PORT}')
     yield client
     await client.close()
-    
+
+
+@pytest.fixture(scope="session")
+async def redis_client():
+    redis = await aioredis.create_redis_pool(
+        (settings.REDIS_HOST, settings.REDIS_PORT)
+    )
+    yield redis
+    await redis.flushall()
+    redis.close()
+
 
 @pytest.fixture(scope='session')
 async def session():
@@ -51,23 +60,27 @@ async def create_fill_delete_es_index(es_client):
     # Удаляет индекс
     for index in settings.es_indexes:
         await delete_index(es_client, index)
-        
 
 
 def expected_response_json(name):
-    with open(f'functional/testdata/expected_response/{name}.json') as f:
+    if 'test_films' in name:
+        file = f'functional/testdata/expected_response/films/{name}.json'
+    elif 'test_genres' in name:
+        file = f'functional/testdata/expected_response/genres/{name}.json'
+    with open(file) as f:
         content = f.read()
         response = json.loads(content)
     return response
-
 
 
 async def create_index(es_client, index):
     """Создает индекс ES"""
     with open(f'functional/testdata/schemes/{index}.json') as es_schema:
         settings, mappings = json.loads(es_schema.read()).values()
-    
-    await es_client.indices.create(index=index, settings=settings, mappings=mappings)
+
+    await es_client.indices.create(
+        index=index, settings=settings, mappings=mappings
+    )
 
 
 async def fill_index(es_client, index):
@@ -84,13 +97,14 @@ async def delete_index(es_client, index):
 
 @pytest.fixture
 def make_get_request(session):
-    async def inner(method: str, params: Optional[dict] = None) -> HTTPResponse:
+    async def inner(
+        method: str, params: Optional[dict] = None
+    ) -> HTTPResponse:
         url = settings.SERVICE_URL + settings.API_URL + method
-        print(url)
         async with session.get(url, params=params) as response:
-          return HTTPResponse(
-            body=await response.json(),
-            headers=response.headers,
-            status=response.status,
-          )
+            return HTTPResponse(
+                body=await response.json(),
+                headers=response.headers,
+                status=response.status,
+            )
     return inner
