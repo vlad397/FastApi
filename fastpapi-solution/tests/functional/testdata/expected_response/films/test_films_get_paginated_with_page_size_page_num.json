@@ -1,0 +1,27 @@
+[
+    {
+        "uuid": "2e5561a2-bb7f-48d3-8249-fb668db6014a",
+        "title": "Lunar: The Silver Star",
+        "imdb_rating": 9.2
+    },
+    {
+        "uuid": "7f28af8a-c629-4af0-b87b-39368a5b8464",
+        "title": "Phantasy Star IV: The End of the Millennium",
+        "imdb_rating": 9
+    },
+    {
+        "uuid": "0312ed51-8833-413f-bff5-0e139c11264a",
+        "title": "Star Wars: Episode V - The Empire Strikes Back",
+        "imdb_rating": 8.7
+    },
+    {
+        "uuid": "3d825f60-9fff-4dfe-b294-1a45fa1e115d",
+        "title": "Star Wars: Episode IV - A New Hope",
+        "imdb_rating": 8.6
+    },
+    {
+        "uuid": "22d50530-14d5-483e-a063-246e92c8c14f",
+        "title": "Lick the Star",
+        "imdb_rating": 6
+    }
+]

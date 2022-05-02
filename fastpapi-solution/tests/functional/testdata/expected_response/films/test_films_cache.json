@@ -1,0 +1,54 @@
+[
+    {
+        "id": "beb9019c-2d30-44e4-a6b5-4ff27c5759b7",
+        "title": "Invasion of the Star Creatures",
+        "description": "A pair of comical soldiers (Robert Ball and Frankie Ray) investigate a mysterious crater in an atomic detonation area and discover several beautiful alien vixens (Dolores Reed and Gloria Victor) who plan to conquer the world using an army of vegetable monsters.",
+        "imdb_rating": 3,
+        "genre": [
+          {
+            "id": "5373d043-3f41-4ea8-9947-4b746c601bbd",
+            "name": "Comedy"
+          },
+          {
+            "id": "6c162475-c7ed-4461-9184-001ef3d9f26e",
+            "name": "Sci-Fi"
+          }
+        ],
+        "director": [
+          "Bruno VeSota"
+        ],
+        "actors_names": [
+          "Dolores Reed",
+          "Frankie Ray",
+          "Gloria Victor",
+          "Robert Ball"
+        ],
+        "writers_names": [
+          "Jonathan Haze"
+        ],
+        "actors": [
+          {
+            "id": "1e6df61b-0859-40d1-ac67-22d093987d3b",
+            "name": "Frankie Ray"
+          },
+          {
+            "id": "2b677381-310b-4950-904c-517002927ee1",
+            "name": "Dolores Reed"
+          },
+          {
+            "id": "62d8e822-105b-4930-8733-586f8eb2dabd",
+            "name": "Gloria Victor"
+          },
+          {
+            "id": "e1bd7098-73fb-4399-a79b-b5b99d719a55",
+            "name": "Robert Ball"
+          }
+        ],
+        "writers": [
+          {
+            "id": "aed21083-15dc-4e47-8d1e-63e52be9f6f0",
+            "name": "Jonathan Haze"
+          }
+        ]
+      }
+]

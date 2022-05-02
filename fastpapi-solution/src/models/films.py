@@ -13,7 +13,7 @@ class Film(BaseMovie):
     genre: list
     actors: Optional[list]
     writers: Optional[list]
-    directors: Optional[list]
+    director: Optional[list]
     actors_names: Optional[list]
     writers_names: Optional[list]
     directors_names: Optional[list]

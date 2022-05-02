@@ -1,0 +1,52 @@
+[
+    {
+        "uuid": "beb9019c-2d30-44e4-a6b5-4ff27c5759b7",
+        "title": "Invasion of the Star Creatures",
+        "imdb_rating": 3
+    },
+    {
+        "uuid": "40340129-96e8-49ce-a45d-2d25d17be48a",
+        "title": "Star Leaf",
+        "imdb_rating": 3.6
+    },
+    {
+        "uuid": "78ff9d2c-4b31-495c-a2b5-07078fdae8e0",
+        "title": "Star Wars: Threads of Destiny",
+        "imdb_rating": 4
+    },
+    {
+        "uuid": "1d811246-a405-42da-b34e-599bd10f7aec",
+        "title": "Star Wars: The Force and the Fury",
+        "imdb_rating": 4.4
+    },
+    {
+        "uuid": "4b6977e2-b3db-4f04-b83e-f091c6fcd49c",
+        "title": "Brightest Star",
+        "imdb_rating": 5.1
+    },
+    {
+        "uuid": "82297925-80cc-4c47-b6cf-6b5e06e23b70",
+        "title": "Star Trek V: The Final Frontier",
+        "imdb_rating": 5.5
+    },
+    {
+        "uuid": "22d50530-14d5-483e-a063-246e92c8c14f",
+        "title": "Lick the Star",
+        "imdb_rating": 6
+    },
+    {
+        "uuid": "3d825f60-9fff-4dfe-b294-1a45fa1e115d",
+        "title": "Star Wars: Episode IV - A New Hope",
+        "imdb_rating": 8.6
+    },
+    {
+        "uuid": "0312ed51-8833-413f-bff5-0e139c11264a",
+        "title": "Star Wars: Episode V - The Empire Strikes Back",
+        "imdb_rating": 8.7
+    },
+    {
+        "uuid": "7f28af8a-c629-4af0-b87b-39368a5b8464",
+        "title": "Phantasy Star IV: The End of the Millennium",
+        "imdb_rating": 9
+    }
+]

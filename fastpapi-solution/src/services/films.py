@@ -31,7 +31,7 @@ class FilmsServices(BaseListService):
                             "query": {
                                 "bool": {
                                     "must": [
-                                        {"match": {"genre.uuid": genre}}
+                                        {"match": {"genre.id": genre}}
                                     ]
                                 }
                             }
