@@ -27,7 +27,7 @@ async def es_client():
     await client.close()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope='session')
 async def redis_client():
     redis = await aioredis.create_redis_pool(
         (settings.REDIS_HOST, settings.REDIS_PORT)
@@ -44,7 +44,7 @@ async def session():
     await session.close()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope='session')
 def event_loop():
     return asyncio.get_event_loop()
 
