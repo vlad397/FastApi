@@ -8,7 +8,7 @@ from elasticsearch import AsyncElasticsearch
 from fastapi import Depends
 from models.films import Film
 from models.person import Person
-from services.base import BaseService, SearchServiceMixin, build_redis_key
+from services.base import BaseService, SearchServiceMixin
 from services.films import FilmService
 
 person_CACHE_EXPIRE_IN_SECONDS = 60 * 5  # 5 минут
@@ -18,7 +18,6 @@ class PersonService(BaseService, SearchServiceMixin):
     instance = Person
 
     async def get_film_list_by_id(self, base_id: str) -> Optional[List[Film]]:
-        redis_key = build_redis_key(self.instance.index, instance_id=base_id)
         # Пытаемся получить данные из кеша, потому что оно работает быстрее
         instance = await self._instance_from_cache(base_id)
         if not instance:
@@ -29,9 +28,9 @@ class PersonService(BaseService, SearchServiceMixin):
                 return None
             # Сохраняем фильм  в кеш
             await self._put_instance_to_cache(instance)
-        film_ids = instance.film_ids
-        film_service = FilmService(self.redis, self.elastic)
-        films = [await film_service.get_by_id(str(film_id)) for film_id in film_ids]
+        f_ids = instance.film_ids
+        f_service = FilmService(self.redis, self.elastic)
+        films = [await f_service.get_by_id(str(film_id)) for film_id in f_ids]
 
         return films
 
