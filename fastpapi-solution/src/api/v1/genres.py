@@ -9,20 +9,35 @@ from services.genres import (GenreService, GenresServices, get_genre_service,
 router = APIRouter()
 
 
-@router.get('/')
+@router.get('/', summary='Получение списка жанров',
+            response_description='Список жанров')
 async def genre_list(
     genres_services: GenresServices = Depends(get_genres_services)
 ) -> list:
+    """
+    Выдает список объектов со следующей информацией:
+
+    - **uuid**: UUID объекта в базе данных
+    - **name**: Название жанра
+    """
     genres = await genres_services.get_all()
 
     return [Genre(uuid=genre['id'], name=genre['name']) for genre in genres]
 
 
-@router.get('/{genre_id}', response_model=Genre)
+@router.get('/{genre_id}', response_model=Genre,
+            summary='Получение жанра по uuid',
+            response_description='Полная информация по жанру')
 async def genre_details(
     genre_id: str,
     genre_service: GenreService = Depends(get_genre_service)
 ) -> Genre:
+    """
+    Выдает объект со следующей информацией:
+
+    - **uuid**: UUID объекта в базе данных
+    - **name**: Название жанра
+    """
     genre = await genre_service.get_by_id(genre_id)
     if not genre:
         raise HTTPException(

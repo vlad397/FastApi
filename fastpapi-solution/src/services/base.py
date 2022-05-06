@@ -83,7 +83,8 @@ class BaseService(SimpleService):
         # Выставляем время жизни кеша — 5 минут
         # https://redis.io/commands/set
         # pydantic позволяет сериализовать модель в json
-        await self.redis.set(instance.id, instance.json(), expire=FILM_CACHE_EXPIRE_IN_SECONDS)
+        await self.redis.set(
+            instance.id, instance.json(), expire=FILM_CACHE_EXPIRE_IN_SECONDS)
 
 
 class SearchServiceMixin(SimpleService):
@@ -148,7 +149,8 @@ class SearchServiceMixin(SimpleService):
 
 
 class BaseListService(SimpleService):
-    """Базовый сервис. Включает подключение к редису и эластику, и основные методы.
+    """Базовый сервис. Включает подключение к редису и эластику,
+    и основные методы.
     Использует дженерик для работы с моделью."""
     instance = T
 
