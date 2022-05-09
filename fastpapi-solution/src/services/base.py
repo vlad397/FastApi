@@ -1,3 +1,4 @@
+from abc import abstractmethod
 import json
 from functools import lru_cache
 from typing import List, Optional, TypeVar
@@ -25,6 +26,32 @@ def build_redis_key(*args, **kwargs):
     return redis_key
 
 
+class AbstractServiceClass:
+    @abstractmethod
+    async def _get_instance_from_elastic(self, **params):
+        pass
+
+    @abstractmethod
+    async def _instance_from_cache(self, **params):
+        pass
+
+    @abstractmethod
+    async def _put_instance_to_cache(self, **params):
+        pass
+
+
+class AbstractBaseServiceClass(AbstractServiceClass):
+    @abstractmethod
+    async def get_by_id(self, **params):
+        pass
+
+
+class AbstractBaseListServiceClass(AbstractServiceClass):
+    @abstractmethod
+    async def get_all(self, **params):
+        pass
+
+
 class SimpleService:
     def __init__(self, redis: Redis, elastic: AsyncElasticsearch):
         self.redis = redis
@@ -37,7 +64,7 @@ class SimpleService:
         return page_size * (page_number - 1)
 
 
-class BaseService(SimpleService):
+class BaseService(SimpleService, AbstractBaseServiceClass):
     """Базовый сервис. Включает подключение к редису и эластику, и основные методы.
     Использует дженерик для работы с моделью."""
     instance = T
@@ -148,7 +175,7 @@ class SearchServiceMixin(SimpleService):
                              expire=FILM_CACHE_EXPIRE_IN_SECONDS)
 
 
-class BaseListService(SimpleService):
+class BaseListService(SimpleService, AbstractBaseListServiceClass):
     """Базовый сервис. Включает подключение к редису и эластику,
     и основные методы.
     Использует дженерик для работы с моделью."""

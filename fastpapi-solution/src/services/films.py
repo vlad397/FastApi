@@ -52,7 +52,7 @@ class FilmsServices(BaseListService):
                     "query": {"match_all": {}}}
         return body
 
-    async def get_all_films(
+    async def get_all(
             self, query: Optional[str], genre: Optional[str], reverse: str,
             page_size: int, page_number: int
     ) -> list:

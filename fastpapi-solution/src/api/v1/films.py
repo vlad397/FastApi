@@ -45,7 +45,7 @@ async def film_list(
     else:
         # Выбор варианта сортировки в зависимости от query param <sort>
         reverse = "desc" if sort[0] == '-' else "asc"
-    films = await films_services.get_all_films(
+    films = await films_services.get_all(
         query, genre, reverse, page_size, page_number
     )
 
