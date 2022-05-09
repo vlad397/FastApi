@@ -67,6 +67,8 @@ def expected_response_json(name):
         file = f'functional/testdata/expected_response/films/{name}.json'
     elif 'test_genres' in name:
         file = f'functional/testdata/expected_response/genres/{name}.json'
+    elif 'test_persons' in name:
+        file = f'functional/testdata/expected_response/persons/{name}.json'
     with open(file) as f:
         content = f.read()
         response = json.loads(content)
