@@ -1,8 +1,6 @@
 import backoff
 import redis
 
-from functional.settings import REDIS_HOST, REDIS_PORT
-
 
 @backoff.on_exception(backoff.expo,
                       redis.exceptions.ConnectionError,
@@ -13,6 +11,6 @@ def wait_for_redis(r):
 
 if __name__ == "__main__":
 
-    r = redis.Redis(host=REDIS_HOST, port=REDIS_PORT)
+    r = redis.Redis(host='redis', port=6379)
 
     wait_for_redis(r)

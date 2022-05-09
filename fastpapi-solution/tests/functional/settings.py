@@ -1,10 +1,11 @@
-ES_HOST = '127.0.0.1'
+ES_HOST = 'elasticsearch'
 ES_PORT = 9200
-REDIS_HOST = '127.0.0.1'
+REDIS_HOST = 'redis'
 REDIS_PORT = 6379
-SERVICE_URL = 'http://127.0.0.1:8000'
-es_indexes = ['movies', 'genres']
+SERVICE_URL = 'http://api:8000'
+es_indexes = ['movies', 'genres', 'persons']
 API_URL = '/api/v1'
 METHOD_FILMS = '/films/'
 METHOD_FILMS_QUERY = '/films'
 METHOD_GENRES = '/genres/'
+METHOD_PERSONS = '/persons/'

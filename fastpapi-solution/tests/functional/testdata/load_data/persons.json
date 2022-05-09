@@ -1,0 +1,67 @@
+[
+    {
+        "_index": "persons",
+        "_id": "0031feab-8f53-412a-8f53-47098a60ac73",
+        "_score": 0,
+        "_source": {
+          "id": "0031feab-8f53-412a-8f53-47098a60ac73",
+          "full_name": "John Sayles",
+          "role": "writer",
+          "film_ids": [
+            "bfe61bd9-5dfd-41ca-80ae-8eca998bc29d"
+          ]
+        }
+    },
+    {
+        "_index": "persons",
+        "_id": "01377f6d-9767-48ce-9e37-3c81f8a3c739",
+        "_score": 0,
+        "_source": {
+          "id": "01377f6d-9767-48ce-9e37-3c81f8a3c739",
+          "full_name": "Woody Harrelson",
+          "role": "actor",
+          "film_ids": [
+            "57beb3fd-b1c9-4f8a-9c06-2da13f95251c"
+          ]
+        }
+    },
+    {
+        "_index": "persons",
+        "_id": "035bc2f6-05d3-42a0-b820-bdea903ada05",
+        "_score": 0,
+        "_source": {
+          "id": "035bc2f6-05d3-42a0-b820-bdea903ada05",
+          "full_name": "Betsy Palmer",
+          "role": "actor",
+          "film_ids": [
+            "8a96580a-6b7b-422e-b4fb-694eaa269ff7"
+          ]
+        }
+    },
+    {
+        "_index": "persons",
+        "_id": "17b36cf5-6f85-4f98-a8b5-7ab6eab58d51",
+        "_score": 0,
+        "_source": {
+          "id": "17b36cf5-6f85-4f98-a8b5-7ab6eab58d51",
+          "full_name": "John Leguizamo",
+          "role": "actor",
+          "film_ids": [
+            "523f1a55-51fe-4d3c-a58d-30d8a61bb267"
+          ]
+        }
+    },
+    {
+      "_index": "persons",
+      "_id": "aed21083-15dc-4e47-8d1e-63e52be9f6f0",
+      "_score": 0,
+      "_source": {
+        "id": "aed21083-15dc-4e47-8d1e-63e52be9f6f0",
+        "full_name": "Jonathan Haze",
+        "role": "writer",
+        "film_ids": [
+          "beb9019c-2d30-44e4-a6b5-4ff27c5759b7"
+        ]
+      }
+    }
+]

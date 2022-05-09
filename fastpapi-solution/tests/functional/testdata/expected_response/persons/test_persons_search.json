@@ -1,0 +1,18 @@
+[
+    {
+        "uuid": "0031feab-8f53-412a-8f53-47098a60ac73",
+        "full_name": "John Sayles",
+        "role": "writer",
+        "film_ids": [
+          "bfe61bd9-5dfd-41ca-80ae-8eca998bc29d"
+        ]
+    },
+    {
+        "uuid": "17b36cf5-6f85-4f98-a8b5-7ab6eab58d51",
+        "full_name": "John Leguizamo",
+        "role": "actor",
+        "film_ids": [
+          "523f1a55-51fe-4d3c-a58d-30d8a61bb267"
+        ]
+    }
+]
