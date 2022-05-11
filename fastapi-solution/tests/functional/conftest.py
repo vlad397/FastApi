@@ -1,8 +1,10 @@
 import asyncio
+import inspect
 import json
 from dataclasses import dataclass
 from typing import Optional
 
+import aiofiles
 import aiohttp
 import aioredis
 import pytest
@@ -10,7 +12,9 @@ from elasticsearch import AsyncElasticsearch
 from elasticsearch.helpers import async_bulk
 from multidict import CIMultiDictProxy
 
-from . import settings
+from .settings import TestSettings
+
+settings = TestSettings()
 
 
 @dataclass
@@ -22,19 +26,19 @@ class HTTPResponse:
 
 @pytest.fixture(scope='session')
 async def es_client():
-    client = AsyncElasticsearch(hosts=f'{settings.ES_HOST}:{settings.ES_PORT}')
+    client = AsyncElasticsearch(hosts=f'{settings.es_host}:{settings.es_port}')
     yield client
     await client.close()
 
 
 @pytest.fixture(scope='session')
 async def redis_client():
-    redis = await aioredis.create_redis_pool(
-        (settings.REDIS_HOST, settings.REDIS_PORT)
+    redis = await aioredis.from_url(
+        f'redis://{settings.redis_host}:{settings.redis_port}'
     )
     yield redis
     await redis.flushall()
-    redis.close()
+    await redis.close()
 
 
 @pytest.fixture(scope='session')
@@ -62,23 +66,25 @@ async def create_fill_delete_es_index(es_client):
         await delete_index(es_client, index)
 
 
-def expected_response_json(name):
+async def expected_response_json(name):
     if 'test_films' in name:
-        file = f'functional/testdata/expected_response/films/{name}.json'
+        file = f'{settings.expected_response_path}/films/{name}.json'
     elif 'test_genres' in name:
-        file = f'functional/testdata/expected_response/genres/{name}.json'
+        file = f'{settings.expected_response_path}/genres/{name}.json'
     elif 'test_persons' in name:
-        file = f'functional/testdata/expected_response/persons/{name}.json'
-    with open(file) as f:
-        content = f.read()
+        file = f'{settings.expected_response_path}/persons/{name}.json'
+    async with aiofiles.open(file) as f:
+        content = await f.read()
         response = json.loads(content)
     return response
 
 
 async def create_index(es_client, index):
     """Создает индекс ES"""
-    with open(f'functional/testdata/schemes/{index}.json') as es_schema:
-        settings, mappings = json.loads(es_schema.read()).values()
+    async with aiofiles.open(
+        f'functional/testdata/schemes/{index}.json'
+    ) as es_schema:
+        settings, mappings = json.loads(await es_schema.read()).values()
 
     await es_client.indices.create(
         index=index, settings=settings, mappings=mappings
@@ -86,9 +92,12 @@ async def create_index(es_client, index):
 
 
 async def fill_index(es_client, index):
-    """Заполняет индекс тествоыми данными"""
-    with open(f'functional/testdata/load_data/{index}.json') as json_file:
-        data = json.load(json_file)
+    """Заполняет индекс тестовыми данными"""
+    async with aiofiles.open(
+        f'functional/testdata/load_data/{index}.json'
+    ) as json_file:
+        json_data = await json_file.read()
+        data = json.loads(json_data)
     await async_bulk(es_client, data, index=index)
 
 
@@ -97,12 +106,18 @@ async def delete_index(es_client, index):
     await es_client.indices.delete(index=index)
 
 
+def get_function_name():
+    """Возвращает название вызывающей функции"""
+    name = inspect.stack()[1][3]
+    return name
+
+
 @pytest.fixture
 def make_get_request(session):
     async def inner(
         method: str, params: Optional[dict] = None
     ) -> HTTPResponse:
-        url = settings.SERVICE_URL + settings.API_URL + method
+        url = settings.service_url + settings.api_url + method
         async with session.get(url, params=params) as response:
             return HTTPResponse(
                 body=await response.json(),

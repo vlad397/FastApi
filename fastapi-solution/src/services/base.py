@@ -1,5 +1,5 @@
-from abc import abstractmethod
 import json
+from abc import abstractmethod
 from functools import lru_cache
 from typing import List, Optional, TypeVar
 
@@ -111,7 +111,7 @@ class BaseService(SimpleService, AbstractBaseServiceClass):
         # https://redis.io/commands/set
         # pydantic позволяет сериализовать модель в json
         await self.redis.set(
-            instance.id, instance.json(), expire=FILM_CACHE_EXPIRE_IN_SECONDS)
+            instance.id, instance.json(), ex=FILM_CACHE_EXPIRE_IN_SECONDS)
 
 
 class SearchServiceMixin(SimpleService):
@@ -172,7 +172,7 @@ class SearchServiceMixin(SimpleService):
     async def _put_search_to_cache(self, redis_key, results: List[T]):
         await self.redis.set(redis_key,
                              json.dumps(jsonable_encoder(results)),
-                             expire=FILM_CACHE_EXPIRE_IN_SECONDS)
+                             ex=FILM_CACHE_EXPIRE_IN_SECONDS)
 
 
 class BaseListService(SimpleService, AbstractBaseListServiceClass):
@@ -194,7 +194,7 @@ class BaseListService(SimpleService, AbstractBaseListServiceClass):
         """Сохранение фильмов в кэше"""
         await self.redis.set(
             redis_key, json.dumps(instance),
-            expire=FILM_CACHE_EXPIRE_IN_SECONDS
+            ex=FILM_CACHE_EXPIRE_IN_SECONDS
         )
 
 

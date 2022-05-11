@@ -1,3 +1,4 @@
+import uuid
 from http import HTTPStatus
 from typing import Optional
 
@@ -59,7 +60,7 @@ async def film_list(
             summary='Получение фильма по uuid',
             response_description='Полная информация по фильму')
 async def film_details(
-        film_id: str,
+        film_id: uuid.UUID,
         film_service: FilmService = Depends(get_film_service)
 ) -> Film_Detail_API:
     """
@@ -74,7 +75,7 @@ async def film_details(
     - **writers**: Список сценаристов
     - **director**: Режиссер
     """
-    film = await film_service.get_by_id(film_id)
+    film = await film_service.get_by_id(str(film_id))
     if not film:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail=static_texts.FILM_404
