@@ -36,7 +36,7 @@ class GenresServices(BaseListService):
         try:
             # Пробуем найти фильмы в es, иначе возвращаем пустой список
             docs = await self.elastic.search(
-                index='genres', body={'size': 26, "query": {"match_all": {}}}
+                index='genres', size=26, body={"query": {"match_all": {}}}
             )
             for doc in docs['hits']['hits']:
                 genres_list.append(doc['_source'])

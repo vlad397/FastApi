@@ -1,3 +1,4 @@
+import uuid
 from http import HTTPStatus
 from typing import List, Optional
 
@@ -41,7 +42,7 @@ async def person_search(
             summary='Поиск персоны по uuid',
             response_description='Полная информация по персоне')
 async def person_details(
-    person_id: str,
+    person_id: uuid.UUID,
     person_service: PersonService = Depends(get_person_service)
 ) -> Person:
     """
@@ -52,10 +53,10 @@ async def person_details(
     - **role**: Роль персоны
     - **film_ids**: Список UUID кинопроизведений, в которых участвовал человек
     """
-    person = await person_service.get_by_id(person_id)
+    person = await person_service.get_by_id(str(person_id))
     if not person:
         raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail=static_texts.FILM_404
+            status_code=HTTPStatus.NOT_FOUND, detail=static_texts.PERSON_404
         )
 
     return Person(
@@ -68,7 +69,7 @@ async def person_details(
             summary='Поиск фильмов по uuid персоны',
             response_description='Список фильмов с участием персоны')
 async def person_film(
-    person_id: str,
+    person_id: uuid.UUID,
     person_service: PersonService = Depends(get_person_service)
 ) -> List[Film_API]:
     """
@@ -78,11 +79,9 @@ async def person_film(
     - **title**: Название кинопроизведения
     - **imdb_rating**: Рейтинг кинопроизведения
     """
-    films = await person_service.get_film_list_by_id(person_id)
+    films = await person_service.get_film_list_by_id(str(person_id))
     if not films:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND, detail=static_texts.FILM_404
-        )
+        return []
 
     return [Film_API(
         uuid=film.id, title=film.title,

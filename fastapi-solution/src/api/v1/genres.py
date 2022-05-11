@@ -1,3 +1,4 @@
+import uuid
 from http import HTTPStatus
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -29,7 +30,7 @@ async def genre_list(
             summary='Получение жанра по uuid',
             response_description='Полная информация по жанру')
 async def genre_details(
-    genre_id: str,
+    genre_id: uuid.UUID,
     genre_service: GenreService = Depends(get_genre_service)
 ) -> Genre:
     """
@@ -38,7 +39,7 @@ async def genre_details(
     - **uuid**: UUID объекта в базе данных
     - **name**: Название жанра
     """
-    genre = await genre_service.get_by_id(genre_id)
+    genre = await genre_service.get_by_id(str(genre_id))
     if not genre:
         raise HTTPException(
             status_code=HTTPStatus.NOT_FOUND, detail=static_texts.GENRE_404
