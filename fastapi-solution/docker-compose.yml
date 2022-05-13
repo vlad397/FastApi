@@ -24,7 +24,7 @@ services:
                  "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
     environment:
       - REDIS_HOST=redis
-      - ${REDIS_PASSWORD-requirepass}
+      - ES_HOST=elasticsearch
     depends_on:
       - elasticsearch
       - redis
