@@ -220,3 +220,4 @@ async def test_films_search_non_existent_title(
 
     assert response.status == HTTPStatus.OK
     assert response.body == result
+    
