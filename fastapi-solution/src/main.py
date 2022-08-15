@@ -19,6 +19,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url='/api/openapi',
     openapi_url='/api/openapi.json',
+    root_path="/film_api",
     default_response_class=ORJSONResponse,
 )
 
