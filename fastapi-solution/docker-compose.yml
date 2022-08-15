@@ -3,28 +3,27 @@ services:
   redis:
     image: redis
     restart: always
+    command: --port 6380
     expose:
-      - '6379'
-    volumes:
-      - ../redis.conf:/usr/local/etc/redis/redis.conf
+      - 6380
 
   elasticsearch:
     image: elasticsearch:7.17.3
     expose:
-      - '9200'
+      - 9201
     environment:
       discovery.type: single-node
       ES_JAVA_OPTS: -Xms200m -Xmx200m
+      http.port: 9201
 
   api:
     build: .
     expose:
-      - "8000"
+      - 8003
     entrypoint: ["gunicorn", "main:app", "--workers", "4", "--worker-class",
-                 "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
-    environment:
-      - REDIS_HOST=redis
-      - ES_HOST=elasticsearch
+                 "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8003"]
+    env_file:
+      - ./.env
     depends_on:
       - elasticsearch
       - redis
